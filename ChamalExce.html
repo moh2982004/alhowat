@@ -455,11 +455,11 @@
 
                 <!-- العمود الأوسط - الأخبار -->
                 <main class="center-column">
-                    <div class="section">
-                        <div class="wrap" onclick="goToAgroupeA()">
+                    <div class="section" >
+                        <div class="wrap" onclick="goTogroupeA()" style="cursor: pointer;">
                   القسم الممتاز لكرة القدم المجموعة أ
             </div>
-<div class="wrap" onclick="goToAgroupeB()">
+<div class="wrap" onclick="goTogroupeB()" style="cursor: pointer;">
                 القسم الممتاز لكرة القدم المجموعة ب
             </div>
                     </div>
@@ -623,12 +623,13 @@
                 });
             });
         });
- function goToAgroupeA() {
-    window.location.href = "AgroupeA.html";
+ function goTogroupeA() {
+    window.location.href = "groupeA.html";
   }
-function goToAgroupeB() {
-    window.location.href = "AgroupeB.html";
+function goTogroupeB() {
+    window.location.href = "groupeB.html";
   }
     </script>
 </body>
+
 </html>
