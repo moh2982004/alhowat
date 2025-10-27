@@ -1,0 +1,818 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+<meta charset="UTF-8">
+<title>🏆 جدول ترتيب البطولة - تصدير Excel</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<!-- SheetJS (xlsx) -->
+<script src="https://cdn.jsdelivr.net/npm/xlsx/dist/xlsx.full.min.js"></script>
+<style>
+body { font-family:"Tajawal", sans-serif; background:#f9f9f9; color:#333; text-align:center; direction:rtl; padding:20px;}
+table { width:100%; border-collapse:collapse; box-shadow:0 0 10px rgba(0,0,0,0.1); background:white; border-radius:10px; overflow:hidden; min-width:900px;}
+th, td { padding:10px; border-bottom:1px solid #ddd; text-align:center;}
+th { background:#005f73; color:white;}
+tr:hover { background:#e0fbfc; }
+button { margin:5px; padding:8px 12px; border:none; border-radius:8px; background:#0a9396; color:white; font-size:14px; cursor:pointer;}
+button:hover { background:#007f87;}
+.match-form { background:white; border-radius:10px; padding:15px; box-shadow:0 0 10px rgba(0,0,0,0.1); width:95%; margin:auto; text-align:right; display:none;}
+.teams-row { display:flex; flex-wrap:wrap; align-items:center; justify-content:space-around; margin-bottom:10px;}
+.team-side { display:flex; flex-direction:column; align-items:center; width:40%;}
+.team-side select, .team-side input { padding:5px; font-size:14px; margin-bottom:5px; direction:rtl;}
+.goal-input { width:50px; text-align:center; font-size:16px; padding:5px; border-radius:5px; border:1px solid #ccc; }
+label { font-size:13px; margin:2px 0; cursor:pointer;}
+input[type="text"], input[type="number"], input[type="date"], input[type="time"], select { padding:5px; margin:5px; width:150px; text-align:center;}
+.message { background:#d4edda; color:#155724; padding:10px; border-radius:5px; margin:10px 0;}
+.error { background:#f8d7da; color:#721c24; padding:10px; border-radius:5px; margin:10px 0;}
+.schedule-item { background: #f8f9fa; margin: 5px 0; padding: 8px; border-radius: 5px; border: 1px solid #dee2e6; text-align:right;}
+.result-item { background: #e8f5e8; margin: 5px 0; padding: 10px; border-radius:5px; border:1px solid #c3e6cb; text-align:right;}
+.small { font-size:13px; color:#555; }
+.controls { display:flex; flex-wrap:wrap; justify-content:center; gap:5px; margin-bottom:15px;}
+.table-container { overflow-x:auto; margin:10px 0; }
+
+.match-row { 
+  background: #f8f9fa; 
+  margin: 10px 0; 
+  padding: 15px; 
+  border-radius: 8px; 
+  border: 1px solid #dee2e6; 
+  text-align: right;
+  display: flex;
+  flex-direction: column;
+}
+.match-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+  padding-bottom: 8px;
+  border-bottom: 1px dashed #ccc;
+}
+.match-teams {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  margin-bottom: 10px;
+}
+.team-info {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 40%;
+}
+.goals-input {
+  width: 60px;
+  text-align: center;
+  font-size: 18px;
+  font-weight: bold;
+  padding: 8px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+}
+.match-details {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-around;
+  margin: 10px 0;
+  font-size: 14px;
+  color: #555;
+}
+.match-options {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 10px;
+  margin: 10px 0;
+}
+.option-group {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin: 0 10px;
+}
+.option-row {
+  display: flex;
+  align-items: center;
+  margin: 3px 0;
+}
+.save-btn {
+  background: #28a745;
+  margin-top: 10px;
+}
+.save-btn:hover {
+  background: #218838;
+}
+
+/* تنسيقات جديدة لعرض النتائج */
+.round-results {
+  margin-bottom: 25px;
+  border: 1px solid #dee2e6;
+  border-radius: 8px;
+  overflow: hidden;
+}
+.round-header {
+  background: #005f73;
+  color: white;
+  padding: 12px;
+  font-size: 18px;
+  font-weight: bold;
+}
+.result-match {
+  background: #f8f9fa;
+  margin: 8px;
+  padding: 15px;
+  border-radius: 6px;
+  border: 1px solid #dee2e6;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.team-result {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 40%;
+}
+.team-name {
+  font-weight: bold;
+  font-size: 16px;
+}
+.team-goals {
+  font-size: 20px;
+  font-weight: bold;
+  background: white;
+  padding: 8px 15px;
+  border-radius: 6px;
+  border: 2px solid #005f73;
+  min-width: 50px;
+  text-align: center;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+.vs-separator {
+  font-weight: bold;
+  font-size: 18px;
+  color: #005f73;
+  background: #e9ecef;
+  padding: 8px 15px;
+  border-radius: 6px;
+  margin: 0 10px;
+}
+.match-status {
+  font-size: 12px;
+  color: #666;
+  margin-top: 5px;
+  text-align: center;
+}
+.status-badge {
+  background: #ffc107;
+  color: #856404;
+  padding: 4px 10px;
+  border-radius: 15px;
+  font-size: 12px;
+  margin: 0 3px;
+  display: inline-block;
+}
+.team-left {
+  justify-content: flex-end;
+  text-align: left;
+}
+.team-right {
+  justify-content: flex-start;
+  text-align: right;
+}
+.result-center {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 5px;
+}
+.score-display {
+  font-size: 24px;
+  font-weight: bold;
+  color: #005f73;
+  background: #e0fbfc;
+  padding: 10px 20px;
+  border-radius: 8px;
+  border: 2px solid #0a9396;
+  min-width: 80px;
+  text-align: center;
+}
+.match-info {
+  font-size: 12px;
+  color: #666;
+  text-align: center;
+}
+</style>
+</head>
+<body>
+
+<h2>🏆 الجدول العام لبطولة القسم الممتاز لكرة القدم برسم الموسم الرياضي 2025-2026 </h2>
+<h2>االمجموعة أ</h2>
+
+<div class="controls">
+  <button id="showProgramBtn">📋 عرض برنامج المباريات</button>
+  <button id="showResultsBtn">📊 عرض نتائج المباريات</button>
+</div>
+
+<!-- إدخال الفرق -->
+<div class="match-form" id="teamsForm">
+  <h3>إدخال أسماء الفرق المشاركة</h3>
+  <div id="teamsMessage"></div>
+  <div id="teamsInputContainer">
+    <input type="text" class="teamNameInput" placeholder="اسم الفريق">
+  </div>
+  <button id="addTeamField">➕ إضافة فريق آخر</button>
+  <br><br>
+  <button id="saveTeams">💾 حفظ الفرق</button>
+</div>
+
+<!-- إدخال برنامج المباريات -->
+<div class="match-form" id="scheduleForm">
+  <h3>إدخال برنامج المباريات (جولة)</h3>
+  <div id="scheduleMessage"></div>
+  <div class="form-header">
+    <label>رقم الدورة:</label>
+    <input type="number" id="scheduleRound" min="1" value="1" style="width:100px; text-align:center;">
+  </div>
+  <div class="teams-row">
+    <div class="team-side">
+      <select id="schedTeam1"></select>
+    </div>
+    <div class="team-side">
+      <select id="schedTeam2"></select>
+    </div>
+  </div>
+  <div style="margin-top:5px;">
+    <label>تاريخ المباراة:</label>
+    <input type="date" id="schedDate">
+    <label>وقت المباراة:</label>
+    <input type="time" id="schedTime">
+    <label>الملعب:</label>
+    <input type="text" id="schedStadium" placeholder="اسم الملعب">
+  </div>
+  <br>
+  <button id="saveSchedule">💾 حفظ المباراة في البرنامج</button>
+  <div id="scheduleList" style="margin-top:10px; text-align:right;"></div>
+</div>
+
+<!-- إدخال نتائج المباريات -->
+<div class="match-form" id="matchForm">
+  <h3>إدخال نتائج المباراة</h3>
+  <div id="matchMessage"></div>
+  <div class="form-header">
+    <label>رقم الدورة:</label>
+    <input type="number" id="roundNumber" min="1" style="width:100px; text-align:center;">
+    <button id="loadMatches">تحميل المباريات</button>
+  </div>
+  <div id="matchesContainer"></div>
+</div>
+
+<!-- عرض البرنامج -->
+<div class="match-form" id="viewProgramForm">
+  <h3>برنامج المباريات حسب الجولات</h3>
+  <div id="programDisplay"></div>
+</div>
+
+<!-- عرض النتائج -->
+<div class="match-form" id="viewResultsForm">
+  <h3>نتائج المباريات حسب الجولات</h3>
+  <div id="resultsDisplay"></div>
+</div>
+
+<!-- جدول الترتيب -->
+<div class="table-container">
+<table id="leagueTable">
+<thead>
+<tr>
+<th>الترتيب</th>
+<th>الفريق</th>
+<th>م</th>
+<th>ن</th>
+<th>ف</th>
+<th>ت</th>
+<th>خ</th>
+<th>له</th>
+<th>عليه</th>
+<th>فارق</th>
+<th>خصم انسحاب</th>
+<th>خصم عقوبة</th>
+</tr>
+</thead>
+<tbody id="tableBody"></tbody>
+</table>
+</div>
+
+<script>
+/* --------- إعدادات Firebase --------- */
+/* هذا هو الأساس (بدون نهاية /;GroupA) — نستخدمه لتصدير المسارات التي أعطيتها */
+const firebaseBase = "https://howat-b10bd-default-rtdb.europe-west1.firebasedatabase.app";
+
+/* --------- المقطع القديم في كودك: قاعدة ;GroupA للحفظ والتحميل المستخدم (نتركه كما كان) --------- */
+const firebaseRoot = "https://howat-b10bd-default-rtdb.europe-west1.firebasedatabase.app/GroupA";
+
+/* --------- كلمة السر (بدّلها هنا) --------- */
+const adminPass = "1234"; // غيرها لأي رقم سري لي بغيتي
+
+/* --------- بيانات محلية --------- */
+let teams = [];
+let detailedRounds = {};
+let matchResults = [];
+
+/* --------- توابع جلب/حفظ بيانات للفايربيز (للحفظ نستخدم مسار ;GroupA كما في كودك الأصلي) --------- */
+async function getData(path){ 
+  // استخدام مسارين ممكنين: المسار كما هو بالنسبة لexport (مثلاً ';GroupAdetailedRounds')
+  // أو تحت مجلد ;GroupA (عند حفظنا سابقاً كنا نحفظ تحت /;GroupA/{path})
+  try{
+    // نجرب أولاً المسار كما هو على الـ base
+    let res = await fetch(`${firebaseBase}/${path}.json`);
+    let data = await res.json();
+    if (data !== null) return data;
+  } catch(e){ /* تجاهل */ }
+
+  try{
+    // نجرب المسار داخل مجلد ;GroupA (قد يكون هذا ما استخدمناه سابقاً)
+    let res2 = await fetch(`${firebaseBase}/;GroupA/${path}.json`);
+    let data2 = await res2.json();
+    if (data2 !== null) return data2;
+  } catch(e){ /* تجاهل */ }
+
+  // أخيراً نجرب مسار بدون ;GroupA suffix (حالة تواجد nodes مثل 'teams' مباشرة)
+  try{
+    let res3 = await fetch(`${firebaseRoot}/${path}.json`);
+    let data3 = await res3.json();
+    if (data3 !== null) return data3;
+  } catch(e){ /* تجاهل */ }
+
+  return null;
+}
+
+async function saveData(path,data){ 
+  try{ 
+    const res=await fetch(`${firebaseRoot}/${path}.json`,{
+      method:"PUT",
+      headers:{"Content-Type":"application/json"},
+      body:JSON.stringify(data)
+    }); 
+    return res.ok;
+  } catch(err){ return false; } 
+}
+
+/* --------- تحميل كلشي ومزامنة الواجهة --------- */
+async function loadAll(){
+  const t=await getData("teams"); // teams تحت ;GroupA أو اسم آخر بحسب ما وجدناه
+  const d=await getData("detailedRounds");
+  const m=await getData("matches");
+  // دعم عدة صيغ: لو البيانات مخزنة كمصفوفة أو كـ object
+  teams=Array.isArray(t)?t:(t?Object.values(t):[]);
+  detailedRounds=d||{};
+  matchResults=Array.isArray(m)?m:(m?Object.values(m):[]);
+  updateTable();
+  fillTeamOptions();
+}
+
+/* --------- تحديث جدول الترتيب --------- */
+function computeRankingFrom(teamsArr, resultsArr){
+  // ننسخ لكي لا نغير الأصل
+  const tbl = teamsArr.map(t => ({ name: t.name, played:0, wins:0, draws:0, losses:0, goalsFor:0, goalsAgainst:0, withdrawPenalty:0, disciplinePenalty:0, points:0, diff:0 }));
+  resultsArr.forEach(r=>{
+    // قد تكون النتائج مستوردة مع مفاتيح مختلفة (goals1/goals2 أو scoreA/scoreB)
+    const teamAName = r.team1 || r.teamA || r.home;
+    const teamBName = r.team2 || r.teamB || r.away;
+    const g1 = Number(r.goals1 ?? r.scoreA ?? r.goalsHome ?? 0);
+    const g2 = Number(r.goals2 ?? r.scoreB ?? r.goalsAway ?? 0);
+    const w1 = !!(r.withdraw1 ?? r.withdrawA);
+    const w2 = !!(r.withdraw2 ?? r.withdrawB);
+    const p1 = !!(r.penalty1 ?? r.penaltyA);
+    const p2 = !!(r.penalty2 ?? r.penaltyB);
+    const post = !!(r.postponed);
+
+    const teamA = tbl.find(x => x.name == teamAName);
+    const teamB = tbl.find(x => x.name == teamBName);
+    if(!teamA || !teamB) return;
+
+    if(!post){
+      teamA.played++; teamB.played++;
+      teamA.goalsFor += g1; teamA.goalsAgainst += g2;
+      teamB.goalsFor += g2; teamB.goalsAgainst += g1;
+
+      if(w1){ teamA.withdrawPenalty++; teamA.losses++; teamB.wins++; }
+      else if(w2){ teamB.withdrawPenalty++; teamB.losses++; teamA.wins++; }
+      else if(p1){ teamA.disciplinePenalty++; teamA.losses++; teamB.wins++; }
+      else if(p2){ teamB.disciplinePenalty++; teamB.losses++; teamA.wins++; }
+      else{
+        if(g1 > g2){ teamA.wins++; teamB.losses++; }
+        else if(g1 < g2){ teamB.wins++; teamA.losses++; }
+        else { teamA.draws++; teamB.draws++; }
+      }
+    }
+  });
+
+  tbl.forEach(t=>{
+    const basePoints = t.wins*3 + t.draws;
+    const totalPenalties = (t.withdrawPenalty||0) + (t.disciplinePenalty||0);
+    t.points = Math.max(0, basePoints - totalPenalties);
+    t.diff = (t.goalsFor||0) - (t.goalsAgainst||0);
+  });
+
+  tbl.sort((a,b)=>b.points - a.points || b.diff - a.diff || b.goalsFor - a.goalsFor);
+  return tbl;
+}
+
+function updateTable(){
+  // teams, matchResults متاحة
+  const ranking = computeRankingFrom(teams, matchResults);
+  // نعرضها في الجدول
+  const tbody=document.getElementById("tableBody"); 
+  tbody.innerHTML="";
+  ranking.forEach((team,i)=>{
+    tbody.innerHTML += `<tr>
+      <td>${i+1}</td><td>${team.name}</td><td>${team.played}</td><td>${team.points}</td>
+      <td>${team.wins}</td><td>${team.draws}</td><td>${team.losses}</td>
+      <td>${team.goalsFor}</td><td>${team.goalsAgainst}</td><td>${team.diff}</td>
+      <td>${team.withdrawPenalty}</td><td>${team.disciplinePenalty}</td>
+    </tr>`;
+  });
+}
+
+/* --------- ملء القوائم --------- */
+function fillTeamOptions(){
+  const s1=document.getElementById("schedTeam1");
+  const s2=document.getElementById("schedTeam2");
+  if(s1&&s2){ 
+    s1.innerHTML=""; s2.innerHTML="";
+    teams.forEach(team=>{ 
+      s1.innerHTML+=`<option value="${team.name}">${team.name}</option>`; 
+      s2.innerHTML+=`<option value="${team.name}">${team.name}</option>`; 
+    }); 
+  }
+}
+
+/* --------- إضافة حقل فرق جديد --------- */
+document.getElementById("addTeamField").addEventListener("click",()=>{
+  const input=document.createElement("input"); 
+  input.type="text"; input.className="teamNameInput"; input.placeholder="اسم الفريق"; 
+  document.getElementById("teamsInputContainer").appendChild(input); 
+});
+
+/* --------- دوال الحماية بكلمة السر --------- */
+function checkPassword(callback){
+  const pass = prompt("🔐 أدخل كلمة السر للمتابعة:");
+  if(pass === adminPass){
+    callback();
+  } else {
+    alert("❌ كلمة السر غير صحيحة!");
+  }
+}
+
+/* --------- حفظ الفرق --------- */
+document.getElementById("saveTeams").addEventListener("click", async ()=>{
+  const inputs=document.querySelectorAll(".teamNameInput");
+  const arr=[]; 
+  inputs.forEach(inp=>{ if(inp.value.trim()) arr.push({name:inp.value.trim()}); });
+  if(arr.length===0){ document.getElementById("teamsMessage").innerHTML='<div class="error">⚠️ أدخل اسم فريق واحد على الأقل</div>'; return; }
+  const ok=await saveData("teams",arr);
+  if(ok){ teams=arr; updateTable(); fillTeamOptions(); document.getElementById("teamsMessage").innerHTML='<div class="message">✅ الفرق تم حفظها</div>'; } 
+  else{ document.getElementById("teamsMessage").innerHTML='<div class="error">❌ فشل الحفظ</div>'; }
+});
+
+/* --------- حفظ برنامج المباريات --------- */
+document.getElementById("saveSchedule").addEventListener("click", async ()=>{
+  const roundInput = document.getElementById("scheduleRound");
+  const round = parseInt(roundInput.value);
+  const t1=document.getElementById("schedTeam1").value;
+  const t2=document.getElementById("schedTeam2").value;
+  const date=document.getElementById("schedDate").value;
+  const time=document.getElementById("schedTime").value;
+  const stadium=document.getElementById("schedStadium").value.trim();
+  if(!round || round<1){ document.getElementById("scheduleMessage").innerHTML='<div class="error">⚠️ أدخل رقم دورة صحيح (1 أو أكبر)</div>'; return; }
+  if(t1===t2){ document.getElementById("scheduleMessage").innerHTML='<div class="error">⚠️ الفرق يجب أن تكون مختلفة</div>'; return; }
+  if(!detailedRounds[round]) detailedRounds[round]=[];
+  detailedRounds[round].push({team1:t1,team2:t2,date,time,stadium});
+  const ok=await saveData("detailedRounds",detailedRounds);
+  if(ok){ document.getElementById("scheduleMessage").innerHTML='<div class="message">✅ المباراة أضيفت للدورة ' + round + '</div>'; renderScheduleList(round); } 
+  else{ document.getElementById("scheduleMessage").innerHTML='<div class="error">❌ فشل الحفظ</div>'; }
+});
+
+function renderScheduleList(round){ 
+  const list=document.getElementById("scheduleList"); list.innerHTML=""; 
+  if(detailedRounds[round]) { detailedRounds[round].forEach(m=>{ list.innerHTML+=`<div class="schedule-item">${m.team1} vs ${m.team2} | ${m.date||'-'} ${m.time||'-'} | ${m.stadium||'-'}</div>`; }); }
+}
+
+/* --------- عرض البرنامج (مفتوح) --------- */
+document.getElementById("showProgramBtn").addEventListener("click", async ()=>{
+  await loadAll();
+  toggleForm("viewProgramForm");
+  const display=document.getElementById("programDisplay"); display.innerHTML="";
+  const validRounds = Object.keys(detailedRounds).filter(round=>parseInt(round)>0).sort((a,b)=>parseInt(a)-parseInt(b));
+  if(validRounds.length===0){ display.innerHTML="<div class='error'>لا يوجد برنامج مباريات حتى الآن</div>"; return; }
+  validRounds.forEach(round=>{
+    const roundNum=parseInt(round);
+    display.innerHTML += `<h4>🏟️ الدورة ${roundNum}</h4>`;
+    detailedRounds[round].forEach(m=>{ display.innerHTML += `<div class="schedule-item">${m.team1} vs ${m.team2} | ${m.date||'-'} ${m.time||'-'} | ${m.stadium||'-'}</div>`; });
+  });
+});
+
+/* --------- عرض النتائج (محدث - الدورة الأخيرة أولاً) --------- */
+document.getElementById("showResultsBtn").addEventListener("click", async ()=>{
+  await loadAll();
+  toggleForm("viewResultsForm");
+  const display=document.getElementById("resultsDisplay"); 
+  display.innerHTML="";
+  
+  if(!matchResults || matchResults.length===0){ 
+    display.innerHTML="<div class='error'>لا توجد نتائج حتى الآن</div>"; 
+    return; 
+  }
+
+  // تجميع النتائج حسب الجولات
+  const resultsByRound = {};
+  matchResults.forEach(result => {
+    const round = result.round;
+    if (!resultsByRound[round]) {
+      resultsByRound[round] = [];
+    }
+    resultsByRound[round].push(result);
+  });
+
+  // عرض النتائج حسب الجولات - الدورة الأخيرة أولاً
+  const validRounds = Object.keys(resultsByRound).filter(round=>parseInt(round)>0).sort((a,b)=>parseInt(b)-parseInt(a)); // تغيير هنا
+  
+  if(validRounds.length===0){ 
+    display.innerHTML="<div class='error'>لا توجد نتائج حتى الآن</div>"; 
+    return; 
+  }
+
+  validRounds.forEach(round=>{
+    const roundNum=parseInt(round);
+    const roundResults = resultsByRound[round];
+    
+    display.innerHTML += `
+      <div class="round-results">
+        <div class="round-header">🏆 الدورة ${roundNum}</div>
+        <div class="round-matches">
+    `;
+    
+    roundResults.forEach(result=>{
+      let statusBadges = '';
+      if (result.postponed) {
+        statusBadges += '<span class="status-badge">⏸️ مؤجلة</span>';
+      }
+      if (result.withdraw1) {
+        statusBadges += '<span class="status-badge">🚫 انسحاب ' + result.team1 + '</span>';
+      }
+      if (result.withdraw2) {
+        statusBadges += '<span class="status-badge">🚫 انسحاب ' + result.team2 + '</span>';
+      }
+      if (result.penalty1) {
+        statusBadges += '<span class="status-badge">⚖️ عقوبة ' + result.team1 + '</span>';
+      }
+      if (result.penalty2) {
+        statusBadges += '<span class="status-badge">⚖️ عقوبة ' + result.team2 + '</span>';
+      }
+      
+      display.innerHTML += `
+        <div class="result-match">
+          <div class="team-result team-right">
+            <div class="team-name">${result.team1}</div>
+          </div>
+          
+          <div class="result-center">
+            <div class="score-display">${result.goals1} - ${result.goals2}</div>
+            <div class="match-info">${result.date || ''} ${result.time ? '| ' + result.time : ''}</div>
+          </div>
+          
+          <div class="team-result team-left">
+            <div class="team-name">${result.team2}</div>
+          </div>
+        </div>
+        ${statusBadges ? `<div class="match-status">${statusBadges}</div>` : ''}
+      `;
+    });
+    
+    display.innerHTML += `</div></div>`;
+  });
+});
+
+/* --------- تحميل المباريات عند إدخال رقم الدورة --------- */
+document.getElementById("loadMatches").addEventListener("click", async ()=>{
+  const round=parseInt(document.getElementById("roundNumber").value);
+  if(!round||round<1) return alert("⚠️ أدخل رقم دورة صحيح (1 أو أكبر)");
+  await loadAll();
+  let matchesInRound=(detailedRounds[round]||[]).slice();
+  if(matchesInRound.length===0) return alert("⚠️ لا توجد مباريات لهذه الدورة");
+  matchesInRound=matchesInRound.filter(m=>{ const result=matchResults.find(r=>r.round==round && r.team1==m.team1 && r.team2==m.team2); return !result || result.postponed; });
+  if(matchesInRound.length===0) return alert("جميع المباريات لهذه الدورة تم إدخال نتائجها بالفعل!");
+  const container=document.getElementById("matchesContainer"); container.innerHTML="";
+  
+  matchesInRound.forEach((match,index)=>{
+    const div=document.createElement("div");
+    div.className="match-row";
+    
+    div.innerHTML=`
+      <div class="match-header">
+        <strong>مباراة ${index+1}</strong>
+        <span class="small">الدورة ${round}</span>
+      </div>
+      <div class="match-teams">
+        <div class="team-info">
+          <strong>${match.team1}</strong>
+          <input type="number" class="goals-input g1" placeholder="0" min="0" value="0">
+        </div>
+        <div style="font-weight:bold; font-size:18px;">VS</div>
+        <div class="team-info">
+          <strong>${match.team2}</strong>
+          <input type="number" class="goals-input g2" placeholder="0" min="0" value="0">
+        </div>
+      </div>
+      <div class="match-details">
+        <div><strong>التاريخ:</strong> ${match.date || 'غير محدد'}</div>
+        <div><strong>الوقت:</strong> ${match.time || 'غير محدد'}</div>
+        <div><strong>الملعب:</strong> ${match.stadium || 'غير محدد'}</div>
+      </div>
+      <div class="match-options">
+        <div class="option-group">
+          <div class="option-row">
+            <label><input type="checkbox" class="w1"> انسحاب ${match.team1}</label>
+          </div>
+          <div class="option-row">
+            <label><input type="checkbox" class="p1"> عقوبة ${match.team1}</label>
+          </div>
+        </div>
+        <div class="option-group">
+          <div class="option-row">
+            <label><input type="checkbox" class="w2"> انسحاب ${match.team2}</label>
+          </div>
+          <div class="option-row">
+            <label><input type="checkbox" class="p2"> عقوبة ${match.team2}</label>
+          </div>
+        </div>
+        <div class="option-group">
+          <div class="option-row">
+            <label><input type="checkbox" class="post"> مؤجلة</label>
+          </div>
+        </div>
+      </div>
+      <button class="save-btn saveMatchBtn">💾 حفظ النتيجة</button>
+    `;
+    
+    container.appendChild(div);
+    
+    div.querySelector(".saveMatchBtn").addEventListener("click", async ()=>{
+      const g1 = parseInt(div.querySelector(".g1").value) || 0;
+      const g2 = parseInt(div.querySelector(".g2").value) || 0;
+      const w1 = div.querySelector(".w1").checked;
+      const w2 = div.querySelector(".w2").checked;
+      const p1 = div.querySelector(".p1").checked;
+      const p2 = div.querySelector(".p2").checked;
+      const post = div.querySelector(".post").checked;
+
+      const existingIndex = matchResults.findIndex(r => r.round == round && r.team1 == match.team1 && r.team2 == match.team2);
+      
+      const resultObj = {
+        round, 
+        team1: match.team1, 
+        team2: match.team2, 
+        goals1: g1, 
+        goals2: g2, 
+        withdraw1: w1, 
+        withdraw2: w2, 
+        penalty1: p1, 
+        penalty2: p2, 
+        postponed: post
+      };
+
+      if(existingIndex > -1) {
+        matchResults[existingIndex] = resultObj;
+      } else {
+        matchResults.push(resultObj);
+      }
+
+      const ok = await saveData("matches", matchResults);
+      if(ok) {
+        document.getElementById("matchMessage").innerHTML = '<div class="message">✅ تم حفظ نتيجة المباراة بنجاح</div>';
+        await loadAll();
+        setTimeout(() => { document.getElementById("matchMessage").innerHTML = ""; }, 3000);
+      } else {
+        document.getElementById("matchMessage").innerHTML = '<div class="error">❌ فشل في حفظ النتيجة</div>';
+      }
+    });
+  });
+});
+
+/* --------- إعادة البطولة (محمي) --------- */
+async function resetAllData(){
+  if(confirm("هل تريد مسح كل البيانات؟")){
+    await saveData("teams", []);
+    await saveData("detailedRounds", {});
+    await saveData("matches", []);
+    teams = []; detailedRounds = {}; matchResults = [];
+    updateTable();
+    alert("✅ تم مسح جميع البيانات");
+  }
+}
+
+/* --------- إظهار الفورم المناسب --------- */
+function toggleForm(formId){
+  document.querySelectorAll(".match-form").forEach(f => f.style.display = "none");
+  document.getElementById(formId).style.display = "block";
+}
+
+/* --------- ربط الأزرار الرئيسية بالباس (إلا العرض يبقى مفتوح) --------- */
+document.getElementById("showProgramBtn").addEventListener("click", ()=> {
+  toggleForm("viewProgramForm");
+});
+document.getElementById("showResultsBtn").addEventListener("click", ()=> {
+  toggleForm("viewResultsForm");
+});
+
+/* --------- زر التصدير إلى Excel --------- */
+/* المسارات التي طلبتها: ;GroupAdetailedRounds, ;GroupAmatchResults, ;GroupAteams */
+async function fetchNode(nodeName){
+  try{
+    const res = await fetch(`${firebaseBase}/${nodeName}.json`);
+    return await res.json();
+  } catch(e){
+    return null;
+  }
+}
+
+function normalizeScheduleData(raw){
+  // raw قد يكون مصفوفة أو object مع مفاتيح
+  const arr = Array.isArray(raw) ? raw : (raw ? Object.values(raw) : []);
+  // نتوقع العناصر بشكل { team1, team2, date, time, stadium, round? }
+  const out = [];
+  arr.forEach(item => {
+    if(!item) return;
+    // إذا كانت العناصر مخزنة كمجموعات داخل object keyed by round:
+    if(item.team1 && item.team2){
+      out.push({
+        round: item.round ?? '',
+        team1: item.team1,
+        team2: item.team2,
+        date: item.date ?? '',
+        time: item.time ?? '',
+        stadium: item.stadium ?? ''
+      });
+    } else {
+      // احتمال أن الرسم الهيكلي هو { "1": [ {...}, {...} ], "2": [...] }
+      // نتعامل مع inner arrays
+      if(Array.isArray(item)){
+        item.forEach(m=>{
+          out.push({
+            round: m.round ?? '',
+            team1: m.team1 ?? m.teamA ?? m.home ?? '',
+            team2: m.team2 ?? m.teamB ?? m.away ?? '',
+            date: m.date ?? '',
+            time: m.time ?? '',
+            stadium: m.stadium ?? ''
+          });
+        });
+      } else {
+        // إذا كان object يمثل دورة
+        // نحاول فحص مفاتيح داخل item
+        const vals = Object.values(item);
+        vals.forEach(v=>{
+          if(v && v.team1 && v.team2){
+            out.push({
+              round: item.round ?? '',
+              team1: v.team1,
+              team2: v.team2,
+              date: v.date ?? '',
+              time: v.time ?? '',
+              stadium: v.stadium ?? ''
+            });
+          }
+        });
+      }
+    }
+  });
+  return out;
+}
+
+function normalizeResultsData(raw){
+  const arr = Array.isArray(raw) ? raw : (raw ? Object.values(raw) : []);
+  const out = [];
+  arr.forEach(r=>{
+    if(!r) return;
+    out.push({
+      round: r.round ?? r.roundNumber ?? '',
+      team1: r.team1 ?? r.teamA ?? r.home ?? '',
+      team2: r.team2 ?? r.teamB ?? r.away ?? '',
+      goals1: r.goals1 ?? r.scoreA ?? r.goalsHome ?? 0,
+      goals2: r.goals2 ?? r.scoreB ?? r.goalsAway ?? 0,
+      withdraw1: r.withdraw1 ?? r.withdrawA ?? false,
+      withdraw2: r.withdraw2 ?? r.withdrawB ?? false,
+      penalty1: r.penalty1 ?? r.penaltyA ?? false,
+      penalty2: r.penalty2 ?? r.penaltyB ?? false,
+      postponed: r.postponed ?? false,
+      date: r.date ?? ''
+    });
+  });
+  return out;
+}
+
+/* --------- تحميل أول مرة --------- */
+loadAll();
+</script>
+
+</body>
+</html>
