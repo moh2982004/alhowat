@@ -614,9 +614,137 @@
             });
         });
 
+
+        // ========== دالة تحميل وعرض مباريات اليوم من المجموعتين ==========
+        async function loadAndDisplayTodayMatches() {
+            const container = document.getElementById('todayMatchesContainer');
+            
+            try {
+                // جلب البيانات من المجموعتين
+                const [groupAData, groupBData] = await Promise.all([
+                    getTodayMatchesData("https://howat-b10bd-default-rtdb.europe-west1.firebasedatabase.app/GroupA/detailedRounds.json"),
+                    getTodayMatchesData("https://howat-b10bd-default-rtdb.europe-west1.firebasedatabase.app/GroupB/detailedRounds.json")
+                ]);
+                
+                // استخراج المباريات اليومية من المجموعتين
+                const todayMatchesA = extractTodayMatches(groupAData, "المجموعة أ");
+                const todayMatchesB = extractTodayMatches(groupBData, "المجموعة ب");
+                
+                // دمج المباريات من المجموعتين
+                const allTodayMatches = [...todayMatchesA, ...todayMatchesB];
+                
+                // عرض المباريات
+                displayTodayMatchesInContainer(allTodayMatches);
+                
+            } catch (error) {
+                console.error('خطأ في تحميل مباريات اليوم:', error);
+                container.innerHTML = `
+                    <div class="today-matches-empty">❌ حدث خطأ في تحميل البيانات</div>
+                    <button class="refresh-today-btn" onclick="loadAndDisplayTodayMatches()">🔄 حاول مرة أخرى</button>
+                `;
+            }
+        }
+
+        // دالة جلب بيانات المباريات من Firebase
+        async function getTodayMatchesData(url) {
+            try {
+                const response = await fetch(url);
+                
+                if (!response.ok) {
+                    throw new Error(`فشل في جلب البيانات من ${url}`);
+                }
+                
+                const data = await response.json();
+                return data || {};
+            } catch (error) {
+                console.error('خطأ في جلب البيانات:', error);
+                // إرجاع كائن فارغ بدلاً من إلقاء خطأ للسماح باستمرار العملية
+                return {};
+            }
+        }
+
+        // دالة استخراج مباريات اليوم من البيانات
+        function extractTodayMatches(detailedRounds, groupName) {
+            const today = new Date();
+            const todayString = today.toISOString().split('T')[0]; // YYYY-MM-DD
+            
+            const todayMatches = [];
+            
+            if (!detailedRounds) return todayMatches;
+            
+            // البحث في جميع الجولات عن المباريات التي تلعب اليوم
+            Object.keys(detailedRounds).forEach(round => {
+                if (detailedRounds[round] && Array.isArray(detailedRounds[round])) {
+                    detailedRounds[round].forEach(match => {
+                        if (match.date === todayString) {
+                            todayMatches.push({
+                                ...match,
+                                round: parseInt(round),
+                                group: groupName
+                            });
+                        }
+                    });
+                }
+            });
+            
+            return todayMatches;
+        }
+
+        // دالة عرض المباريات في الحيز المخصص
+        function displayTodayMatchesInContainer(todayMatches) {
+            const container = document.getElementById('todayMatchesContainer');
+            
+            if (!todayMatches || todayMatches.length === 0) {
+                container.innerHTML = `
+                    <div class="today-matches-empty">لا توجد مباريات اليوم</div>
+                    <button class="refresh-today-btn" onclick="loadAndDisplayTodayMatches()">🔄 تحديث</button>
+                `;
+                return;
+            }
+            
+            let matchesHTML = '';
+            
+            todayMatches.forEach(match => {
+                const groupBadge = match.group === "المجموعة أ" ? 
+                    '<span class="match-badge">أ</span>' : 
+                    '<span class="match-badge">ب</span>';
+                
+                const roundBadge = `<span class="round-badge">د${match.round}</span>`;
+                
+                matchesHTML += `
+                    <div class="match">
+                        <div class="badges-container">
+                            ${groupBadge}
+                            ${roundBadge}
+                        </div>
+                        <div class="teams">
+                            <div class="team">${match.team1 || 'فريق غير معروف'}</div>
+                            <div class="vs">VS</div>
+                            <div class="team">${match.team2 || 'فريق غير معروف'}</div>
+                        </div>
+                        <div class="date">${match.time || 'لم يتم تحديد الوقت'}</div>
+                        <div class="stadium">${match.stadium || 'ملعب غير محدد'}</div>
+                    </div>
+                `;
+            });
+            
+            matchesHTML += `
+                <button class="refresh-today-btn" onclick="loadAndDisplayTodayMatches()">🔄 تحديث المباريات</button>
+            `;
+            
+            container.innerHTML = matchesHTML;
+        }
+
+        // تحميل مباريات اليوم تلقائياً عند فتح الصفحة
+        document.addEventListener('DOMContentLoaded', function() {
+            // انتظر قليلاً لضمان تحميل DOM بالكامل
+            setTimeout(loadAndDisplayTodayMatches, 100);
+        });
+        
     </script>
 </body>
 
 </html>
+
 
 
