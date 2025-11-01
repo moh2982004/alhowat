@@ -803,7 +803,8 @@ function goToChamal1() {
                 matchesHTML += `
                     <div class="match">
                         <div class="teams">
-                            <div class="team">${match.team1 || 'فريق غير معروف'} ${groupBadge}</div>
+                        ${groupBadge}
+                            <div class="team">${match.team1 || 'فريق غير معروف'} </div>
                             <div class="vs">VS</div>
                             <div class="team">${match.team2 || 'فريق غير معروف'}</div>
                         </div>
@@ -830,6 +831,7 @@ function goToChamal1() {
 </body>
 
 </html>
+
 
 
 
