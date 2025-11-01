@@ -708,7 +708,7 @@ function goToChamal1() {
         });
 
         
-        // ========== دالة تحميل وعرض مباريات اليوم من المجموعتين ==========
+       // ========== دالة تحميل وعرض مباريات اليوم من المجموعتين ==========
         async function loadAndDisplayTodayMatches() {
             const container = document.getElementById('todayMatchesContainer');
             
@@ -799,14 +799,19 @@ function goToChamal1() {
             
             todayMatches.forEach(match => {
                 const groupBadge = match.group === "المجموعة أ" ? 
-                    '<span class="group-badge">أ</span>' : 
-                    '<span class="group-badge">ب</span>';
+                    '<span class="match-badge">أ</span>' : 
+                    '<span class="match-badge">ب</span>';
+                
+                const roundBadge = `<span class="round-badge">د${match.round}</span>`;
                 
                 matchesHTML += `
                     <div class="match">
+                        <div class="badges-container">
+                            ${groupBadge}
+                            ${roundBadge}
+                        </div>
                         <div class="teams">
-                        ${groupBadge}
-                            <div class="team">${match.team1 || 'فريق غير معروف'} </div>
+                            <div class="team">${match.team1 || 'فريق غير معروف'}</div>
                             <div class="vs">VS</div>
                             <div class="team">${match.team2 || 'فريق غير معروف'}</div>
                         </div>
@@ -833,6 +838,7 @@ function goToChamal1() {
 </body>
 
 </html>
+
 
 
 
