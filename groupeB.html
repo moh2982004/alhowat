@@ -201,6 +201,18 @@ input[type="text"], input[type="number"], input[type="date"], input[type="time"]
   color: #666;
   text-align: center;
 }
+/* تنسيقات إضافية للفرق في حالة الراحة */
+.resting-team {
+  background: #e8f4f8;
+  margin: 5px 0;
+  padding: 10px;
+  border-radius: 5px;
+  border: 1px solid #b8daff;
+  text-align: right;
+  color: #004085;
+  font-style: italic;
+}
+  
 </style>
 </head>
 <body>
@@ -810,6 +822,57 @@ function normalizeResultsData(raw){
   return out;
 }
 
+/* --------- تحديد الفرق في حالة راحة في كل دورة --------- */
+function getRestingTeams(round) {
+  const playingTeams = new Set();
+  
+  // جمع جميع الفرق التي تلعب في هذه الدورة
+  if (detailedRounds[round]) {
+    detailedRounds[round].forEach(match => {
+      playingTeams.add(match.team1);
+      playingTeams.add(match.team2);
+    });
+  }
+  
+  // تحديد الفرق التي لا تلعب (في حالة راحة)
+  const restingTeams = teams.filter(team => !playingTeams.has(team.name));
+  
+  return restingTeams;
+}
+
+/* --------- عرض البرنامج (محدث - مع الفرق في حالة الراحة) --------- */
+document.getElementById("showProgramBtn").addEventListener("click", async ()=>{
+  await loadAll();
+  toggleForm("viewProgramForm");
+  const display=document.getElementById("programDisplay"); 
+  display.innerHTML="";
+  
+  const validRounds = Object.keys(detailedRounds).filter(round=>parseInt(round)>0).sort((a,b)=>parseInt(a)-parseInt(b));
+  if(validRounds.length===0){ 
+    display.innerHTML="<div class='error'>لا يوجد برنامج مباريات حتى الآن</div>"; 
+    return; 
+  }
+  
+  validRounds.forEach(round=>{
+    const roundNum=parseInt(round);
+    const restingTeams = getRestingTeams(roundNum);
+    
+    display.innerHTML += `<h4>🏟️ الدورة ${roundNum}</h4>`;
+    
+    // عرض المباريات
+    detailedRounds[round].forEach(m=>{ 
+      display.innerHTML += `<div class="schedule-item">${m.team1} vs ${m.team2} | ${m.date||'-'} ${m.time||'-'} | ${m.stadium||'-'}</div>`; 
+    });
+    
+    // عرض الفرق في حالة راحة
+    if (restingTeams.length > 0) {
+      display.innerHTML += `<div class="schedule-item" style="background: #e8f4f8; border-color: #b8daff; color: #004085; font-style: italic;">
+        <strong>🔄 في راحة:</strong> ${restingTeams.map(team => team.name).join('، ')}
+      </div>`;
+    }
+  });
+});
+  
 /* --------- تحميل أول مرة --------- */
 loadAll();
 </script>
@@ -817,3 +880,4 @@ loadAll();
 </body>
 
 </html>
+
