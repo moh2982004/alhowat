@@ -405,13 +405,7 @@
                 <div id="currentDateTimeArabic" class="datetime-arabic"></div>
                 <div id="currentDateTimeFrench" class="datetime-french"></div>
             </div>
-            <div style="display: flex; align-items: center;">
-                <span> هواة الشمال - أخبار الشباب الممارس لكرة القدم المنضوي تحت لواء العصبة الجهوية لطنجة تطوان الحسيمة لكرة القدم</span>
-                <div class="language-switcher">
-                    <button class="lang-btn active" data-lang="ar">العربية</button>
-                    <button class="lang-btn" data-lang="fr">Français</button>
-                </div>
-            </div>
+            
         </div>
     </div>
 
@@ -450,12 +444,7 @@
                         <div class="ad-space">
                             <img src="https://via.placeholder.com/300x250/cccccc/666666?text=إعلان+1" alt="إعلان 1">
                         </div>
-                        <div class="ad-space">
-                            <img src="https://via.placeholder.com/300x250/cccccc/666666?text=إعلان+2" alt="إعلان 2">
-                        </div>
-                        <div class="ad-space">
-                            <img src="https://via.placeholder.com/300x250/cccccc/666666?text=إعلان+3" alt="إعلان 3">
-                        </div>
+                       
                     </div>
                 </aside>
 
@@ -464,13 +453,13 @@
                     <div class="section">
                         <!-- شعارات البطولات -->
          <div class="championships" ">
-           <div class="championship-logo" onclick="goToChamalExce()">
+           <div class="championship-logo" onclick="goToChamalExce()" style="cursor: pointer;">
                 <img src="ICON1.webp">
             </div> 
 
          
 
-            <div class="championship-logo" onclick="goToChamal1()">
+            <div class="championship-logo" onclick="goToChamal1()" style="cursor: pointer;">
                 <img src="DEV-1.webp">
             </div>
             
@@ -642,6 +631,82 @@
 function goToChamal1() {
     window.location.href = "Chamal1.html";
   }
+        // 🔥 عداد الزيارات - يحسب كل زيارة للصفحة
+        async function updateVisitCounter() {
+            try {
+                // الرابط الأساسي لقاعدة البيانات
+                const firebaseUrl = "https://howat-b10bd-default-rtdb.europe-west1.firebasedatabase.app/ChamalV";
+                
+                // جلب العداد الحالي
+                const response = await fetch(`${firebaseUrl}/visitCount.json`);
+                let currentCount = 0;
+                
+                if (response.ok) {
+                    const data = await response.json();
+                    currentCount = data || 0;
+                }
+                
+                // زيادة العداد
+                const newCount = currentCount + 1;
+                
+                // حفظ العداد الجديد
+                const saveResponse = await fetch(`${firebaseUrl}/visitCount.json`, {
+                    method: "PUT",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify(newCount)
+                });
+                
+                if (saveResponse.ok) {
+                    // عرض العداد في الصفحة
+                    displayVisitCounter(newCount);
+                }
+            } catch (error) {
+                console.log('خطأ في تحديث عداد الزيارات:', error);
+            }
+        }
+
+        // دالة لعرض العداد في الصفحة
+        function displayVisitCounter(count) {
+            // التحقق إذا كان العداد موجوداً مسبقاً
+            let counterElement = document.getElementById('visitCounter');
+            
+            if (!counterElement) {
+                // إنشاء عنصر العداد إذا لم يكن موجوداً
+                counterElement = document.createElement('div');
+                counterElement.id = 'visitCounter';
+                counterElement.style.cssText = `
+                    position: fixed;
+                    bottom: 15px;
+                    left: 15px;
+                    background: #0b5d3b;
+                    color: white;
+                    padding: 10px 15px;
+                    border-radius: 20px;
+                    font-family: 'Cairo', sans-serif;
+                    font-size: 14px;
+                    z-index: 1000;
+                    box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+                    direction: ltr;
+                    text-align: center;
+                `;
+                document.body.appendChild(counterElement);
+            }
+            
+            // تحديث النص
+            counterElement.innerHTML = `👥 عدد الزيارات: <strong>${count}</strong>`;
+        }
+
+        // تشغيل العداد عند تحميل الصفحة
+        document.addEventListener('DOMContentLoaded', function() {
+            setTimeout(updateVisitCounter, 1000);
+        });
     </script>
 </body>
+
 </html>
+
+
+
+
