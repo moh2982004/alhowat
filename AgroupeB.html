@@ -29,6 +29,179 @@ input[type="text"], input[type="number"], input[type="date"], input[type="time"]
 .controls { display:flex; flex-wrap:wrap; justify-content:center; gap:5px; margin-bottom:15px;}
 .table-container { overflow-x:auto; margin:10px 0; }
 
+
+
+:root {
+            --accent: #0b5d3b;
+            --muted: #6b6b6b;
+            --bg: #ffffff;
+            --card: #fbfbfb;
+            --border: #e6e6e6;
+            --maxwidth: 1200px;
+            --container-padding: 18px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html, body {
+            height: 100%;
+            font-family: 'Cairo', sans-serif;
+            background: linear-gradient(180deg, #fff, #f7f7f7);
+            color: #222;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        .wrap {
+            max-width: var(--maxwidth);
+            margin: 0 auto;
+            padding: 0 var(--container-padding);
+        }
+/* الشريط العلوي */
+        .top-bar {
+            background: var(--accent);
+            color: white;
+            padding: 10px 0;
+            font-size: 14px;
+        }
+
+        .top-bar .wrap {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .datetime-container {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+        }
+
+        .datetime-arabic {
+            font-family: 'Cairo', sans-serif;
+            direction: rtl;
+        }
+
+        .datetime-french {
+            font-family: Arial, sans-serif;
+            direction: ltr;
+            font-size: 13px;
+            margin-top: 2px;
+            opacity: 0.9;
+        }
+ /* اختيار اللغة */
+        .language-switcher {
+            display: flex;
+            gap: 10px;
+            margin-left: 20px;
+        }
+
+        .lang-btn {
+            background: rgba(255,255,255,0.2);
+            border: 1px solid rgba(255,255,255,0.3);
+            color: white;
+            padding: 4px 12px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 12px;
+            transition: all 0.3s;
+        }
+
+        .lang-btn:hover, .lang-btn.active {
+            background: rgba(255,255,255,0.3);
+        }
+
+
+/* العنوان الرئيسي */
+        header.site-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 20px;
+            padding: 20px 0;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .logo {
+            width: 90px;
+            height: 90px;
+            background: var(--card);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 1px solid var(--border);
+            font-weight: bold;
+            color: var(--accent);
+            text-align: center;
+            line-height: 1.2;
+            overflow: hidden;
+        }
+
+        .logo img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .brand-text h1 {
+            margin: 0;
+            font-size: 24px;
+            font-weight: 700;
+text-align: right;
+        }
+
+        .brand-text .subtitle {
+            color: var(--muted);
+            font-size: 16px;
+            margin-top: 5px;
+        }
+
+ /* التنقل الرئيسي */
+        nav.main-nav {
+            margin: 12px 0;
+            border-top: 1px solid var(--border);
+            border-bottom: 1px solid var(--border);
+            background: linear-gradient(180deg, rgba(11, 93, 59, 0.03), transparent);
+        }
+
+        nav.main-nav ul {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            list-style: none;
+            margin: 0;
+            padding: 8px 6px;
+        }
+
+        nav.main-nav li {
+            padding: 6px 10px;
+            border-radius: 6px;
+            transition: background 0.3s;
+        }
+
+        nav.main-nav li:hover {
+            background: rgba(11, 93, 59, 0.1);
+        }
+
+        nav.main-nav a {
+            color: var(--accent);
+            text-decoration: none;
+            font-weight: 600;
+            display: block;
+        }
+
+  
 .match-row { 
   background: #f8f9fa; 
   margin: 10px 0; 
@@ -105,6 +278,34 @@ input[type="text"], input[type="number"], input[type="date"], input[type="time"]
 </head>
 <body>
 
+
+ <!-- الشريط العلوي مع التاريخ والوقت -->
+    <div class="top-bar">
+        <div class="wrap">
+            <div class="datetime-container">
+                <div id="currentDateTimeArabic" class="datetime-arabic"></div>
+                <div id="currentDateTimeFrench" class="datetime-french"></div>
+            </div>
+            
+        </div>
+    </div>
+
+    <div class="wrap">
+        <!-- العنوان الرئيسي مع الشعار -->
+        <header class="site-header">
+            <div class="brand">
+                <div class="logo">
+                    <!-- استبدل هذا بمصدر الصورة الفعلي -->
+                    <img src="logo.png">
+                </div>
+                <div class="brand-text">
+                    <h1>هواة الشمال</h1>
+                    <div class="subtitle">أخبار الشباب الممارس لكرة القدم  المنضوي تحت لواء العصبة الجهوية لطنجة تطوان الحسيمة لكرة القدم</div>
+                </div>
+            </div>
+        </header>
+
+  
 <h2>🏆 الجدول العام لبطولة القسم الممتاز لكرة القدم برسم الموسم الرياضي 2026-2025 </h2>
 <h2>المجموعة ب</h2>
 
@@ -207,6 +408,88 @@ input[type="text"], input[type="number"], input[type="date"], input[type="time"]
 </div>
 
 <script>
+
+
+ // دالة لعرض التاريخ والوقت الحاليين بالعربية مع الأرقام العالمية
+        function updateDateTimeArabic() {
+            const now = new Date();
+            
+            const weekdays = ['الأحد', 'الإثنين', 'الثلاثاء', 'الأربعاء', 'الخميس', 'الجمعة', 'السبت'];
+            const months = ['يناير', 'فبراير', 'مارس', 'أبريل', 'مايو', 'يونيو', 'يوليو', 'أغسطس', 'سبتمبر', 'أكتوبر', 'نوفمبر', 'ديسمبر'];
+            
+            const weekday = weekdays[now.getDay()];
+            const day = now.getDate();
+            const month = months[now.getMonth()];
+            const year = now.getFullYear();
+            
+            const hours = now.getHours().toString().padStart(2, '0');
+            const minutes = now.getMinutes().toString().padStart(2, '0');
+            const seconds = now.getSeconds().toString().padStart(2, '0');
+            
+            const dateTimeStr = `${weekday}، ${day} ${month} ${year} - ${hours}:${minutes}:${seconds}`;
+            document.getElementById('currentDateTimeArabic').textContent = dateTimeStr;
+        }
+        
+        // دالة لعرض التاريخ والوقت الحاليين بالفرنسية
+        function updateDateTimeFrench() {
+            const now = new Date();
+            const options = { 
+                weekday: 'long', 
+                year: 'numeric', 
+                month: 'long', 
+                day: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit',
+                second: '2-digit'
+            };
+            const dateTimeStr = now.toLocaleDateString('fr-FR', options);
+            document.getElementById('currentDateTimeFrench').textContent = dateTimeStr;
+        }
+        
+        // تحديث التاريخ والوقت عند تحميل الصفحة ثم كل ثانية
+        updateDateTimeArabic();
+        updateDateTimeFrench();
+        setInterval(updateDateTimeArabic, 1000);
+        setInterval(updateDateTimeFrench, 1000);
+
+        // التنقل بين الصفحات
+        document.addEventListener('DOMContentLoaded', function() {
+            const navLinks = document.querySelectorAll('nav.main-nav a');
+            const pages = document.querySelectorAll('.page-content');
+            
+            navLinks.forEach(link => {
+                link.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const targetPage = this.getAttribute('data-page');
+                    
+                    // إخفاء جميع الصفحات
+                    pages.forEach(page => {
+                        page.classList.remove('active');
+                    });
+                    
+                    // إظهار الصفحة المطلوبة
+                    document.getElementById(targetPage).classList.add('active');
+                });
+            });
+            
+            // تبديل اللغة
+            const langButtons = document.querySelectorAll('.lang-btn');
+            langButtons.forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const lang = this.getAttribute('data-lang');
+                    
+                    // تحديث حالة الأزرار
+                    langButtons.forEach(b => b.classList.remove('active'));
+                    this.classList.add('active');
+                    
+                    // هنا يمكنك إضافة منطق تغيير اللغة
+                    console.log('تم تغيير اللغة إلى: ' + lang);
+                    // يمكنك استخدام مكتبة مثل i18next للترجمة الفعلية
+                });
+            });
+        });
+  
+  
 /* --------- إعدادات Firebase --------- */
 /* هذا هو الأساس (بدون نهاية /GroupB) — نستخدمه لتصدير المسارات التي أعطيتها */
 const firebaseBase = "https://howat-b10bd-default-rtdb.europe-west1.firebasedatabase.app";
@@ -729,4 +1012,5 @@ loadAll();
 
 </body>
 </html>
+
 
