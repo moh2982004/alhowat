@@ -641,31 +641,46 @@
 function goTo1groupeB() {
     window.location.href = "1groupeB.html";
   }
-         function goTo1groupeA() {
+         function goTo1groupeC() {
     window.location.href = "1groupeC.html";
   }
-function goTo1groupeB() {
+function goTo1groupeD() {
     window.location.href = "1groupeD.html";
   }
 
 
-        // ========== دالة تحميل وعرض مباريات اليوم من المجموعتين ==========
+        // ========== دالة تحميل وعرض مباريات اليوم من جميع المجموعات ==========
         async function loadAndDisplayTodayMatches() {
             const container = document.getElementById('todayMatchesContainer');
             
             try {
-                // جلب البيانات من المجموعتين
-                const [groupAData, groupBData] = await Promise.all([
+                // جلب البيانات من جميع المجموعات الست
+                const [groupAData, groupBData, group1AData, group1BData, group1CData, group1DData] = await Promise.all([
                     getTodayMatchesData("https://howat-b10bd-default-rtdb.europe-west1.firebasedatabase.app/GroupA/detailedRounds.json"),
-                    getTodayMatchesData("https://howat-b10bd-default-rtdb.europe-west1.firebasedatabase.app/GroupB/detailedRounds.json")
+                    getTodayMatchesData("https://howat-b10bd-default-rtdb.europe-west1.firebasedatabase.app/GroupB/detailedRounds.json"),
+                    getTodayMatchesData("https://howat-b10bd-default-rtdb.europe-west1.firebasedatabase.app/1GroupA/detailedRounds.json"),
+                    getTodayMatchesData("https://howat-b10bd-default-rtdb.europe-west1.firebasedatabase.app/1GroupB/detailedRounds.json"),
+                    getTodayMatchesData("https://howat-b10bd-default-rtdb.europe-west1.firebasedatabase.app/1GroupC/detailedRounds.json"),
+                    getTodayMatchesData("https://howat-b10bd-default-rtdb.europe-west1.firebasedatabase.app/1GroupD/detailedRounds.json")
                 ]);
                 
-                // استخراج المباريات اليومية من المجموعتين
-                const todayMatchesA = extractTodayMatches(groupAData, "المجموعة أ");
-                const todayMatchesB = extractTodayMatches(groupBData, "المجموعة ب");
+                // استخراج المباريات اليومية من جميع المجموعات
+                const todayMatchesA = extractTodayMatches(groupAData, "القسم الممتاز المجموعة  أ ");
+                const todayMatchesB = extractTodayMatches(groupBData, "القسم الممتاز المجموعة ب");
+                const todayMatches1A = extractTodayMatches(group1AData, "القسم الأول المجموعة  أ");
+                const todayMatches1B = extractTodayMatches(group1BData, "القسم الأول المجموعة  ب");
+                const todayMatches1C = extractTodayMatches(group1CData, "القسم الأول المجموعة ج");
+                const todayMatches1D = extractTodayMatches(group1DData, "القسم الأول المجموعة  د");
                 
-                // دمج المباريات من المجموعتين
-                const allTodayMatches = [...todayMatchesA, ...todayMatchesB];
+                // دمج المباريات من جميع المجموعات
+                const allTodayMatches = [
+                    ...todayMatchesA, 
+                    ...todayMatchesB, 
+                    ...todayMatches1A, 
+                    ...todayMatches1B, 
+                    ...todayMatches1C, 
+                    ...todayMatches1D
+                ];
                 
                 // عرض المباريات
                 displayTodayMatchesInContainer(allTodayMatches);
@@ -739,9 +754,23 @@ function goTo1groupeB() {
             let matchesHTML = '';
             
             todayMatches.forEach(match => {
-                const groupBadge = match.group === "المجموعة أ" ? 
-                    '<span class="match-badge">أ</span>' : 
-                    '<span class="match-badge">ب</span>';
+                // تحديد رمز المجموعة بناءً على اسمها
+                let groupBadge = '';
+                if (match.group === "المجموعة أ") {
+                    groupBadge = '<span class="match-badge">أ</span>';
+                } else if (match.group === "المجموعة ب") {
+                    groupBadge = '<span class="match-badge">ب</span>';
+                } else if (match.group === "المجموعة 1أ") {
+                    groupBadge = '<span class="match-badge">1أ</span>';
+                } else if (match.group === "المجموعة 1ب") {
+                    groupBadge = '<span class="match-badge">1ب</span>';
+                } else if (match.group === "المجموعة 1ج") {
+                    groupBadge = '<span class="match-badge">1ج</span>';
+                } else if (match.group === "المجموعة 1د") {
+                    groupBadge = '<span class="match-badge">1د</span>';
+                } else {
+                    groupBadge = `<span class="match-badge">${match.group}</span>`;
+                }
                 
                 const roundBadge = `<span class="round-badge">د${match.round}</span>`;
                 
@@ -777,12 +806,4 @@ function goTo1groupeB() {
         
     </script>
 </body>
-
 </html>
-
-
-
-
-
-
-
