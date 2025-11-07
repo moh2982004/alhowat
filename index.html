@@ -919,6 +919,20 @@
             setTimeout(updateVisitCounter, 1000);
         });
 
+        // ========== دالة تنسيق التاريخ بالأرقام العالمية ==========
+        function formatDateWithWesternNumbers(date) {
+            const weekdays = ['الأحد', 'الإثنين', 'الثلاثاء', 'الأربعاء', 'الخميس', 'الجمعة', 'السبت'];
+            const months = ['يناير', 'فبراير', 'مارس', 'أبريل', 'مايو', 'يونيو', 'يوليو', 'أغسطس', 'سبتمبر', 'أكتوبر', 'نوفمبر', 'ديسمبر'];
+            
+            const weekday = weekdays[date.getDay()];
+            const day = date.getDate();
+            const month = months[date.getMonth()];
+            const year = date.getFullYear();
+            
+            // استخدام الأرقام العالمية (0-9) بدلاً من الهندية
+            return `${weekday}، ${day} ${month} ${year}`;
+        }
+
         // ========== دالة تحميل وعرض مباريات اليوم من جميع المجموعات ==========
         async function loadAndDisplayTodayMatches() {
             const container = document.getElementById('todayMatchesContainer');
@@ -1200,14 +1214,9 @@
                 
                 const roundBadge = `<span class="round-badge">د${match.round}</span>`;
                 
-                // تنسيق التاريخ لعرضه بشكل مناسب
+                // تنسيق التاريخ بالأرقام العالمية
                 const matchDate = new Date(match.date);
-                const formattedDate = matchDate.toLocaleDateString('ar-EG', {
-                    weekday: 'long',
-                    year: 'numeric',
-                    month: 'long',
-                    day: 'numeric'
-                });
+                const formattedDate = formatDateWithWesternNumbers(matchDate);
                 
                 matchesHTML += `
                     <div class="match">
@@ -1379,14 +1388,9 @@
                 
                 const roundBadge = `<span class="round-badge">د${match.round}</span>`;
                 
-                // تنسيق التاريخ لعرضه بشكل مناسب
+                // تنسيق التاريخ بالأرقام العالمية
                 const matchDate = new Date(match.date);
-                const formattedDate = matchDate.toLocaleDateString('ar-EG', {
-                    weekday: 'long',
-                    year: 'numeric',
-                    month: 'long',
-                    day: 'numeric'
-                });
+                const formattedDate = formatDateWithWesternNumbers(matchDate);
                 
                 // عرض نتيجة المباراة إذا كانت متاحة
                 let resultHTML = '';
