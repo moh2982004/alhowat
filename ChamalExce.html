@@ -817,39 +817,28 @@ function goTogroupeB() {
                 // جلب البيانات من جميع المجموعات الست
                 const [groupAData, groupBData, group1AData, group1BData, group1CData, group1DData] = await Promise.all([
                     fetchMatchesData("https://howat-b10bd-default-rtdb.europe-west1.firebasedatabase.app/GroupA/detailedRounds.json"),
-                    fetchMatchesData("https://howat-b10bd-default-rtdb.europe-west1.firebasedatabase.app/GroupB/detailedRounds.json"),
-                    fetchMatchesData("https://howat-b10bd-default-rtdb.europe-west1.firebasedatabase.app/1GroupA/detailedRounds.json"),
-                    fetchMatchesData("https://howat-b10bd-default-rtdb.europe-west1.firebasedatabase.app/1GroupB/detailedRounds.json"),
-                    fetchMatchesData("https://howat-b10bd-default-rtdb.europe-west1.firebasedatabase.app/1GroupC/detailedRounds.json"),
-                    fetchMatchesData("https://howat-b10bd-default-rtdb.europe-west1.firebasedatabase.app/1GroupD/detailedRounds.json")
+                    fetchMatchesData("https://howat-b10bd-default-rtdb.europe-west1.firebasedatabase.app/GroupB/detailedRounds.json")
+                    
                 ]);
                 
                 // جلب نتائج المباريات من جميع المجموعات
                 const [resultsA, resultsB, results1A, results1B, results1C, results1D] = await Promise.all([
                     fetchMatchesData("https://howat-b10bd-default-rtdb.europe-west1.firebasedatabase.app/GroupA/matches.json"),
-                    fetchMatchesData("https://howat-b10bd-default-rtdb.europe-west1.firebasedatabase.app/GroupB/matches.json"),
-                    fetchMatchesData("https://howat-b10bd-default-rtdb.europe-west1.firebasedatabase.app/1GroupA/matches.json"),
-                    fetchMatchesData("https://howat-b10bd-default-rtdb.europe-west1.firebasedatabase.app/1GroupB/matches.json"),
-                    fetchMatchesData("https://howat-b10bd-default-rtdb.europe-west1.firebasedatabase.app/1GroupC/matches.json"),
-                    fetchMatchesData("https://howat-b10bd-default-rtdb.europe-west1.firebasedatabase.app/1GroupD/matches.json")
+                    fetchMatchesData("https://howat-b10bd-default-rtdb.europe-west1.firebasedatabase.app/GroupB/matches.json")
+                    
                 ]);
                 
                 // استخراج المباريات اليومية من جميع المجموعات
                 const todayMatchesA = extractTodayMatches(groupAData, resultsA, "القسم الممتاز المجموعة أ");
                 const todayMatchesB = extractTodayMatches(groupBData, resultsB, "القسم الممتاز المجموعة ب");
-                const todayMatches1A = extractTodayMatches(group1AData, results1A, "القسم الأول المجموعة أ");
-                const todayMatches1B = extractTodayMatches(group1BData, results1B, "القسم الأول المجموعة ب");
-                const todayMatches1C = extractTodayMatches(group1CData, results1C, "القسم الأول المجموعة ج");
-                const todayMatches1D = extractTodayMatches(group1DData, results1D, "القسم الأول المجموعة د");
+                
                 
                 // دمج المباريات من جميع المجموعات
                 const allTodayMatches = [
                     ...todayMatchesA, 
-                    ...todayMatchesB, 
-                    ...todayMatches1A, 
-                    ...todayMatches1B, 
-                    ...todayMatches1C, 
-                    ...todayMatches1D
+                    ...todayMatchesB
+                    
+          
                 ];
                 
                 // ترتيب المباريات حسب الوقت (من الأقرب إلى الأبعد)
@@ -970,15 +959,7 @@ function goTogroupeB() {
                     groupBadge = '<span class="match-badge">ممتاز أ</span>';
                 } else if (match.group === "القسم الممتاز المجموعة ب") {
                     groupBadge = '<span class="match-badge">ممتاز ب</span>';
-                } else if (match.group === "القسم الأول المجموعة أ") {
-                    groupBadge = '<span class="match-badge">الأول أ</span>';
-                } else if (match.group === "القسم الأول المجموعة ب") {
-                    groupBadge = '<span class="match-badge">الأول ب</span>';
-                } else if (match.group === "القسم الأول المجموعة ج") {
-                    groupBadge = '<span class="match-badge">الأول ج</span>';
-                } else if (match.group === "القسم الأول المجموعة د") {
-                    groupBadge = '<span class="match-badge">الأول د</span>';
-                } else {
+                }  else {
                     groupBadge = `<span class="match-badge">${match.group}</span>`;
                 }
                 
