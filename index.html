@@ -922,6 +922,15 @@
             setTimeout(updateVisitCounter, 1000);
         });
 
+        // ========== دالة تنسيق التاريخ بالتوقيت المحلي ==========
+        function getLocalDateString() {
+            const now = new Date();
+            const year = now.getFullYear();
+            const month = String(now.getMonth() + 1).padStart(2, '0');
+            const day = String(now.getDate()).padStart(2, '0');
+            return `${year}-${month}-${day}`;
+        }
+
         // ========== دالة تنسيق التاريخ بالأرقام العالمية ==========
         function formatDateWithWesternNumbers(date) {
             const weekdays = ['الأحد', 'الإثنين', 'الثلاثاء', 'الأربعاء', 'الخميس', 'الجمعة', 'السبت'];
@@ -1019,8 +1028,7 @@
 
         // دالة استخراج مباريات اليوم من البيانات
         function extractTodayMatches(detailedRounds, results, groupName) {
-            const today = new Date();
-            const todayString = today.toISOString().split('T')[0]; // YYYY-MM-DD
+            const todayString = getLocalDateString(); // استخدام التوقيت المحلي
             
             const todayMatches = [];
             
@@ -1222,7 +1230,7 @@
             const twoWeeksLater = new Date();
             twoWeeksLater.setDate(today.getDate() + 14);
             
-            const todayString = today.toISOString().split('T')[0]; // YYYY-MM-DD
+            const todayString = getLocalDateString(); // استخدام التوقيت المحلي
             const twoWeeksLaterString = twoWeeksLater.toISOString().split('T')[0];
             
             const upcomingMatches = [];
@@ -1385,7 +1393,7 @@
             const twoWeeksAgo = new Date();
             twoWeeksAgo.setDate(today.getDate() - 14);
             
-            const todayString = today.toISOString().split('T')[0]; // YYYY-MM-DD
+            const todayString = getLocalDateString(); // استخدام التوقيت المحلي
             const twoWeeksAgoString = twoWeeksAgo.toISOString().split('T')[0];
             
             const previousMatches = [];
