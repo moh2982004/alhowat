@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
@@ -399,6 +400,178 @@
                 height: 160px;
             }
         }
+
+ /* أنماط إضافية للمباريات القادمة والسابقة */
+        .matches-nav {
+            display: flex;
+            gap: 5px;
+            margin-bottom: 0;
+            border-bottom: 1px solid var(--border);
+            padding-bottom: 0;
+        }
+
+        .matches-nav-btn {
+            background: #f5f5f5;
+            color: var(--muted);
+            border: 1px solid var(--border);
+            border-bottom: none;
+            padding: 12px 20px;
+            border-radius: 8px 8px 0 0;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 600;
+            transition: all 0.3s;
+            position: relative;
+            bottom: -1px;
+        }
+
+        .matches-nav-btn:hover {
+            background: #e9e9e9;
+        }
+
+        .matches-nav-btn.active {
+            background: white;
+            color: var(--accent);
+            border-bottom: 1px solid white;
+            box-shadow: 0 2px 3px rgba(0,0,0,0.05);
+        }
+
+        .match-result {
+            font-weight: bold;
+            color: var(--accent);
+            font-size: 14px;
+            margin: 0 10px;
+        }
+
+        .match-status {
+            font-size: 11px;
+            padding: 2px 6px;
+            border-radius: 4px;
+            margin-left: 5px;
+        }
+
+        .status-played {
+            background: #0b5d3b;
+            color: white;
+        }
+
+        .status-upcoming {
+            background: #e63946;
+            color: white;
+        }
+        
+        /* تبويبات المباريات */
+        .matches-tab {
+            display: none;
+        }
+        
+        .matches-tab.active {
+            display: block;
+        }
+        
+        .matches-container {
+            background: white;
+            border: 1px solid var(--border);
+            border-top: none;
+            border-radius: 0 0 8px 8px;
+            min-height: 300px;
+            padding: 15px;
+        }
+
+        /* شارات المجموعة والدورة */
+        .match-badge {
+            background: #e63946;
+            color: white;
+            padding: 2px 6px;
+            border-radius: 10px;
+            font-size: 11px;
+            margin-left: 5px;
+            font-weight: bold;
+        }
+
+        .round-badge {
+            background: #0b5d3b;
+            color: white;
+            padding: 2px 6px;
+            border-radius: 10px;
+            font-size: 9px;
+            margin-left: 3px;
+            font-weight: bold;
+        }
+
+        .badges-container {
+            display: flex;
+            justify-content: center;
+            gap: 5px;
+            margin-bottom: 5px;
+        }
+
+        .today-matches-loading {
+            text-align: center;
+            padding: 15px;
+            color: var(--muted);
+            font-size: 9px;
+        }
+
+        .today-matches-empty {
+            text-align: center;
+            padding: 15px;
+            color: var(--muted);
+            font-size:9px;
+            font-style: italic;
+        }
+
+        .refresh-today-btn {
+            background: var(--accent);
+            color: white;
+            border: none;
+            padding: 6px 12px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 9px;
+            margin: 8px auto 0;
+            display: block;
+            transition: background 0.3s;
+        }
+
+        .refresh-today-btn:hover {
+            background: #09482c;
+        }
+
+        .match .teams {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 4px;
+            align-items: center;
+        }
+
+        .match .team {
+            flex: 1;
+            text-align: center;
+            font-size: 12px;
+        }
+
+        .match .vs {
+            margin: 0 8px;
+            color: var(--muted);
+            font-weight: bold;
+            font-size: 15px;
+        }
+
+        .match .date {
+            color: var(--muted);
+            font-size: 11px;
+            text-align: center;
+            margin-top: 3px;
+        }
+
+        .match .stadium {
+            color: var(--muted);
+            font-size: 11px;
+            text-align: center;
+            margin-top: 2px;
+
+}
     </style>
 </head>
 <body>
@@ -438,9 +611,12 @@
                 <aside class="left-column">
 <div class="section">
                         <h2>مباريات اليوم</h2>
-                        <div id="todayMatchesContainer">
-                            <div class="today-matches-loading">⏳ جاري تحميل مباريات اليوم...</div>
-                        </div>
+                        <!-- محتوى مباريات اليوم -->
+                            <div id="todayMatchesTab" class="matches-tab active">
+                                <div id="todayMatchesContainer">
+                                    <div class="today-matches-loading">⏳ جاري تحميل مباريات اليوم...</div>
+                                </div>
+                            </div>
                         </div>
                         <div class="match">
                     
@@ -653,38 +829,53 @@ function goTo1groupeD() {
   }
 
 
-        // ========== دالة تحميل وعرض مباريات اليوم من جميع المجموعات ==========
+     
+       // ========== دالة تحميل وعرض مباريات اليوم من جميع المجموعات ==========
         async function loadAndDisplayTodayMatches() {
             const container = document.getElementById('todayMatchesContainer');
             
             try {
                 // جلب البيانات من جميع المجموعات الست
-                const [groupAData, groupBData, group1AData, group1BData, group1CData, group1DData] = await Promise.all([
-                    getTodayMatchesData("https://howat-b10bd-default-rtdb.europe-west1.firebasedatabase.app/GroupA/detailedRounds.json"),
-                    getTodayMatchesData("https://howat-b10bd-default-rtdb.europe-west1.firebasedatabase.app/GroupB/detailedRounds.json"),
-                    getTodayMatchesData("https://howat-b10bd-default-rtdb.europe-west1.firebasedatabase.app/1GroupA/detailedRounds.json"),
-                    getTodayMatchesData("https://howat-b10bd-default-rtdb.europe-west1.firebasedatabase.app/1GroupB/detailedRounds.json"),
-                    getTodayMatchesData("https://howat-b10bd-default-rtdb.europe-west1.firebasedatabase.app/1GroupC/detailedRounds.json"),
-                    getTodayMatchesData("https://howat-b10bd-default-rtdb.europe-west1.firebasedatabase.app/1GroupD/detailedRounds.json")
+                const [ group1AData, group1BData, group1CData, group1DData] = await Promise.all([
+
+                    fetchMatchesData("https://howat-b10bd-default-rtdb.europe-west1.firebasedatabase.app/1GroupA/detailedRounds.json"),
+                    fetchMatchesData("https://howat-b10bd-default-rtdb.europe-west1.firebasedatabase.app/1GroupB/detailedRounds.json"),
+                    fetchMatchesData("https://howat-b10bd-default-rtdb.europe-west1.firebasedatabase.app/1GroupC/detailedRounds.json"),
+                    fetchMatchesData("https://howat-b10bd-default-rtdb.europe-west1.firebasedatabase.app/1GroupD/detailedRounds.json")
+                ]);
+                
+                // جلب نتائج المباريات من جميع المجموعات
+                const [ results1A, results1B, results1C, results1D] = await Promise.all([
+
+                    fetchMatchesData("https://howat-b10bd-default-rtdb.europe-west1.firebasedatabase.app/1GroupA/matches.json"),
+                    fetchMatchesData("https://howat-b10bd-default-rtdb.europe-west1.firebasedatabase.app/1GroupB/matches.json"),
+                    fetchMatchesData("https://howat-b10bd-default-rtdb.europe-west1.firebasedatabase.app/1GroupC/matches.json"),
+                    fetchMatchesData("https://howat-b10bd-default-rtdb.europe-west1.firebasedatabase.app/1GroupD/matches.json")
                 ]);
                 
                 // استخراج المباريات اليومية من جميع المجموعات
-                const todayMatchesA = extractTodayMatches(groupAData, "القسم الممتاز المجموعة  أ ");
-                const todayMatchesB = extractTodayMatches(groupBData, "القسم الممتاز المجموعة ب");
-                const todayMatches1A = extractTodayMatches(group1AData, "القسم الأول المجموعة  أ");
-                const todayMatches1B = extractTodayMatches(group1BData, "القسم الأول المجموعة  ب");
-                const todayMatches1C = extractTodayMatches(group1CData, "القسم الأول المجموعة ج");
-                const todayMatches1D = extractTodayMatches(group1DData, "القسم الأول المجموعة  د");
+
+                const todayMatches1A = extractTodayMatches(group1AData, results1A, "القسم الأول المجموعة أ");
+                const todayMatches1B = extractTodayMatches(group1BData, results1B, "القسم الأول المجموعة ب");
+                const todayMatches1C = extractTodayMatches(group1CData, results1C, "القسم الأول المجموعة ج");
+                const todayMatches1D = extractTodayMatches(group1DData, results1D, "القسم الأول المجموعة د");
                 
                 // دمج المباريات من جميع المجموعات
                 const allTodayMatches = [
-                    ...todayMatchesA, 
-                    ...todayMatchesB, 
+
                     ...todayMatches1A, 
                     ...todayMatches1B, 
                     ...todayMatches1C, 
                     ...todayMatches1D
                 ];
+                
+                // ترتيب المباريات حسب الوقت (من الأقرب إلى الأبعد)
+                allTodayMatches.sort((a, b) => {
+                    if (a.time && b.time) {
+                        return a.time.localeCompare(b.time);
+                    }
+                    return 0;
+                });
                 
                 // عرض المباريات
                 displayTodayMatchesInContainer(allTodayMatches);
@@ -699,7 +890,7 @@ function goTo1groupeD() {
         }
 
         // دالة جلب بيانات المباريات من Firebase
-        async function getTodayMatchesData(url) {
+        async function fetchMatchesData(url) {
             try {
                 const response = await fetch(url);
                 
@@ -717,7 +908,7 @@ function goTo1groupeD() {
         }
 
         // دالة استخراج مباريات اليوم من البيانات
-        function extractTodayMatches(detailedRounds, groupName) {
+        function extractTodayMatches(detailedRounds, results, groupName) {
             const today = new Date();
             const todayString = today.toISOString().split('T')[0]; // YYYY-MM-DD
             
@@ -730,10 +921,21 @@ function goTo1groupeD() {
                 if (detailedRounds[round] && Array.isArray(detailedRounds[round])) {
                     detailedRounds[round].forEach(match => {
                         if (match.date === todayString) {
+                            // البحث عن نتيجة المباراة
+                            let matchResult = null;
+                            if (results && Array.isArray(results)) {
+                                matchResult = results.find(r => 
+                                    r.round == round && 
+                                    r.team1 == match.team1 && 
+                                    r.team2 == match.team2
+                                );
+                            }
+                            
                             todayMatches.push({
                                 ...match,
                                 round: parseInt(round),
-                                group: groupName
+                                group: groupName,
+                                result: matchResult
                             });
                         }
                     });
@@ -741,6 +943,27 @@ function goTo1groupeD() {
             });
             
             return todayMatches;
+        }
+
+        // دالة التحقق من حالة المباراة (منتهية أم لا)
+        function isMatchFinished(match) {
+            if (!match.time) return false;
+            
+            // تقسيم الوقت إلى ساعات ودقائق
+            const [hours, minutes] = match.time.split(':').map(Number);
+            
+            // إنشاء تاريخ ووقت بداية المباراة
+            const matchStartTime = new Date();
+            matchStartTime.setHours(hours, minutes, 0, 0);
+            
+            // حساب الوقت الحالي
+            const now = new Date();
+            
+            // حساب الفارق الزمني بالدقائق
+            const timeDiff = (now - matchStartTime) / (1000 * 60);
+            
+            // إذا مر أكثر من 90 دقيقة من وقت بداية المباراة، تعتبر منتهية
+            return timeDiff >= 90;
         }
 
         // دالة عرض المباريات في الحيز المخصص
@@ -760,33 +983,52 @@ function goTo1groupeD() {
             todayMatches.forEach(match => {
                 // تحديد رمز المجموعة بناءً على اسمها
                 let groupBadge = '';
-                if (match.group === "المجموعة أ") {
-                    groupBadge = '<span class="match-badge">أ</span>';
-                } else if (match.group === "المجموعة ب") {
-                    groupBadge = '<span class="match-badge">ب</span>';
-                } else if (match.group === "المجموعة 1أ") {
-                    groupBadge = '<span class="match-badge">1أ</span>';
-                } else if (match.group === "المجموعة 1ب") {
-                    groupBadge = '<span class="match-badge">1ب</span>';
-                } else if (match.group === "المجموعة 1ج") {
-                    groupBadge = '<span class="match-badge">1ج</span>';
-                } else if (match.group === "المجموعة 1د") {
-                    groupBadge = '<span class="match-badge">1د</span>';
+                if (match.group === "القسم الأول المجموعة أ") {
+                    groupBadge = '<span class="match-badge">الأول أ</span>';
+                } else if (match.group === "القسم الأول المجموعة ب") {
+                    groupBadge = '<span class="match-badge">الأول ب</span>';
+                } else if (match.group === "القسم الأول المجموعة ج") {
+                    groupBadge = '<span class="match-badge">الأول ج</span>';
+                } else if (match.group === "القسم الأول المجموعة د") {
+                    groupBadge = '<span class="match-badge">الأول د</span>';
                 } else {
                     groupBadge = `<span class="match-badge">${match.group}</span>`;
                 }
                 
                 const roundBadge = `<span class="round-badge">د${match.round}</span>`;
                 
+                // التحقق من حالة المباراة
+                const isFinished = isMatchFinished(match);
+                const finishedBadge = isFinished ? '<span class="match-status status-played">منتهية</span>' : '';
+                
+                // عرض نتيجة المباراة إذا كانت متاحة
+                let resultHTML = '';
+                if (match.result) {
+                    const { goals1, goals2, withdraw1, withdraw2, penalty1, penalty2, postponed } = match.result;
+                    
+                    if (postponed) {
+                        resultHTML = `<div class="match-result">مؤجلة</div>`;
+                    } else if (withdraw1) {
+                        resultHTML = `<div class="match-result">انسحاب ${match.team1}</div>`;
+                    } else if (withdraw2) {
+                        resultHTML = `<div class="match-result">انسحاب ${match.team2}</div>`;
+                    } else {
+                        resultHTML = `<div class="match-result">${goals1} - ${goals2}</div>`;
+                    }
+                } else {
+                    resultHTML = `<div class="vs">VS</div>`;
+                }
+                
                 matchesHTML += `
                     <div class="match">
                         <div class="badges-container">
                             ${groupBadge}
                             ${roundBadge}
+                            ${finishedBadge}
                         </div>
                         <div class="teams">
                             <div class="team">${match.team1 || 'فريق غير معروف'}</div>
-                            <div class="vs">VS</div>
+                            ${resultHTML}
                             <div class="team">${match.team2 || 'فريق غير معروف'}</div>
                         </div>
                         <div class="date">${match.time || 'لم يتم تحديد الوقت'}</div>
@@ -801,6 +1043,8 @@ function goTo1groupeD() {
             
             container.innerHTML = matchesHTML;
         }
+
+
 
         // تحميل مباريات اليوم تلقائياً عند فتح الصفحة
         document.addEventListener('DOMContentLoaded', function() {
