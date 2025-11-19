@@ -475,7 +475,10 @@
             border-top: none;
             border-radius: 0 0 8px 8px;
             min-height: 300px;
+            max-height: 500px; /* ارتفاع ثابت للحيز */
+            overflow-y: auto; /* تفعيل التمرير العمودي */
             padding: 15px;
+            position: relative;
         }
 
         /* شارات المجموعة والدورة */
@@ -572,14 +575,63 @@
             margin-top: 2px;
         }
 
-        .debug-info {
-            background: #f8f8f8;
-            border: 1px solid #ddd;
-            border-radius: 5px;
-            padding: 10px;
-            margin-top: 10px;
-            font-size: 12px;
-            color: #666;
+        /* شريط التمرير المخصص */
+        .matches-container::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .matches-container::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 4px;
+        }
+
+        .matches-container::-webkit-scrollbar-thumb {
+            background: var(--accent);
+            border-radius: 4px;
+        }
+
+        .matches-container::-webkit-scrollbar-thumb:hover {
+            background: #09482c;
+        }
+
+        /* مؤشر التمرير للهواتف */
+        .scroll-indicator {
+            position: absolute;
+            right: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: rgba(11, 93, 59, 0.7);
+            color: white;
+            padding: 5px 8px;
+            border-radius: 15px;
+            font-size: 10px;
+            opacity: 0;
+            transition: opacity 0.3s;
+            pointer-events: none;
+            z-index: 10;
+        }
+
+        .matches-container:hover .scroll-indicator {
+            opacity: 1;
+        }
+
+        /* تحسينات للهواتف */
+        @media (max-width: 768px) {
+            .matches-container {
+                max-height: 400px; /* ارتفاع أقل للهواتف */
+                -webkit-overflow-scrolling: touch; /* تمرير سلس على iOS */
+            }
+            
+            .scroll-indicator {
+                display: none; /* إخفاء المؤشر على الهواتف */
+            }
+        }
+
+        /* تحسينات للأجهزة التي تدعم اللمس */
+        @media (hover: none) and (pointer: coarse) {
+            .matches-container {
+                scroll-behavior: smooth;
+            }
         }
     </style>
 </head>
@@ -628,6 +680,9 @@
                         </div>
                         
                         <div class="matches-container">
+                            <!-- مؤشر التمرير -->
+                            <div class="scroll-indicator">اسحب للتمرير</div>
+                            
                             <!-- محتوى مباريات اليوم -->
                             <div id="todayMatchesTab" class="matches-tab active">
                                 <div id="todayMatchesContainer">
@@ -665,7 +720,7 @@
                             <div class="championship-logo" onclick="goToChamal1()" style="cursor: pointer;">
                                 <img src="DEV-1.webp">
                             </div>
-                            <div class="championship-logo" onclick="goToChamal2()" style="cursor: pointer;">
+                             <div class="championship-logo" onclick="goToChamal2()" style="cursor: pointer;">
                                 <img src="DEV-2.webp">
                             </div>
                         </div>
@@ -773,6 +828,22 @@
                     }
                 });
             });
+
+            // تحسين تجربة التمرير على الهواتف
+            const matchesContainer = document.querySelector('.matches-container');
+            if (matchesContainer) {
+                // إضافة تأثير التمرير السلس
+                matchesContainer.style.scrollBehavior = 'smooth';
+                
+                // تحسين الأداء على الهواتف
+                matchesContainer.addEventListener('touchstart', function() {
+                    this.style.scrollBehavior = 'auto';
+                });
+                
+                matchesContainer.addEventListener('touchend', function() {
+                    this.style.scrollBehavior = 'smooth';
+                });
+            }
         });
         
         function goToChamalExce() {
@@ -782,10 +853,11 @@
         function goToChamal1() {
             window.location.href = "Chamal1.html";
         }
-        
-        function goToChamal2() {
+
+         function goToChamal2() {
             window.location.href = "Chamal2.html";
         }
+        
         // 🔥 عداد الزيارات - يحسب كل زيارة للصفحة
         async function updateVisitCounter() {
             try {
