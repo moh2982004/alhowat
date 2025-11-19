@@ -1,0 +1,1154 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>هواة الشمال -- القسم الثاني لكرة القدم</title>
+    <link rel="apple-touch-icon" sizes="180x180" href="logo.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="logo.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="logo.png">
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <style>
+        /* جميع الأنماط السابقة تبقى كما هي */
+        :root {
+            --accent: #0b5d3b;
+            --muted: #6b6b6b;
+            --bg: #ffffff;
+            --card: #fbfbfb;
+            --border: #e6e6e6;
+            --maxwidth: 1200px;
+            --container-padding: 18px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html, body {
+            height: 100%;
+            font-family: 'Cairo', sans-serif;
+            background: linear-gradient(180deg, #fff, #f7f7f7);
+            color: #222;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        .wrap {
+            max-width: var(--maxwidth);
+            margin: 0 auto;
+            padding: 0 var(--container-padding);
+        }
+
+        /* الشريط العلوي */
+        .top-bar {
+            background: var(--accent);
+            color: white;
+            padding: 10px 0;
+            font-size: 14px;
+        }
+
+        .top-bar .wrap {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .datetime-container {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+        }
+
+        .datetime-arabic {
+            font-family: 'Cairo', sans-serif;
+            direction: rtl;
+        }
+
+        .datetime-french {
+            font-family: Arial, sans-serif;
+            direction: ltr;
+            font-size: 13px;
+            margin-top: 2px;
+            opacity: 0.9;
+        }
+
+        /* اختيار اللغة */
+        .language-switcher {
+            display: flex;
+            gap: 10px;
+            margin-left: 20px;
+        }
+
+        .lang-btn {
+            background: rgba(255,255,255,0.2);
+            border: 1px solid rgba(255,255,255,0.3);
+            color: white;
+            padding: 4px 12px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 12px;
+            transition: all 0.3s;
+        }
+
+        .lang-btn:hover, .lang-btn.active {
+            background: rgba(255,255,255,0.3);
+        }
+
+        /* العنوان الرئيسي */
+        header.site-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 20px;
+            padding: 20px 0;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .logo {
+            width: 90px;
+            height: 90px;
+            background: var(--card);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 1px solid var(--border);
+            font-weight: bold;
+            color: var(--accent);
+            text-align: center;
+            line-height: 1.2;
+            overflow: hidden;
+        }
+
+        .logo img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .brand-text h1 {
+            margin: 0;
+            font-size: 24px;
+            font-weight: 700;
+        }
+
+        .brand-text .subtitle {
+            color: var(--muted);
+            font-size: 16px;
+            margin-top: 5px;
+        }
+
+        /* التنقل الرئيسي */
+        nav.main-nav {
+            margin: 12px 0;
+            border-top: 1px solid var(--border);
+            border-bottom: 1px solid var(--border);
+            background: linear-gradient(180deg, rgba(11, 93, 59, 0.03), transparent);
+        }
+
+        nav.main-nav ul {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            list-style: none;
+            margin: 0;
+            padding: 8px 6px;
+        }
+
+        nav.main-nav li {
+            padding: 6px 10px;
+            border-radius: 6px;
+            transition: background 0.3s;
+        }
+
+        nav.main-nav li:hover {
+            background: rgba(11, 93, 59, 0.1);
+        }
+
+        nav.main-nav a {
+            color: var(--accent);
+            text-decoration: none;
+            font-weight: 600;
+            display: block;
+        }
+
+        /* وصف الموقع */
+        .site-description {
+            background: linear-gradient(180deg, rgba(11, 93, 59, 0.05), transparent);
+            padding: 15px 0;
+            text-align: center;
+            font-size: 16px;
+            color: var(--muted);
+            margin: 10px 0;
+        }
+
+        /* شعارات البطولات */
+        .championships {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            margin: 25px 0;
+            flex-wrap: wrap;
+        }
+
+        .championship-logo {
+            width: 140px;
+            height: 140px;
+            background: var(--card);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 1px solid var(--border);
+            font-weight: bold;
+            color: var(--accent);
+            text-align: center;
+            line-height: 1.3;
+            overflow: hidden;
+        }
+
+        .championship-logo img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        /* التخطيط الرئيسي */
+        .main-layout {
+            display: grid;
+            grid-template-columns: 1fr 2fr 1fr;
+            gap: 20px;
+            margin: 25px 0;
+        }
+
+        /* الأقسام */
+        .section {
+            background: var(--card);
+            padding: 20px;
+            border-radius: 10px;
+            border: 1px solid var(--border);
+            box-shadow: 0 4px 12px rgba(20, 20, 20, 0.03);
+            margin-bottom: 20px;
+        }
+
+        .section h2 {
+            margin-bottom: 15px;
+            color: var(--accent);
+            font-size: 18px;
+            border-bottom: 1px solid var(--border);
+            padding-bottom: 8px;
+        }
+
+        /* اللقاءات */
+        .match {
+            padding: 12px 0;
+            border-bottom: 1px dashed rgba(0, 0, 0, 0.1);
+        }
+
+        .match:last-child {
+            border-bottom: none;
+        }
+
+        .match .teams {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 5px;
+        }
+
+        .match .score {
+            font-weight: bold;
+            color: var(--accent);
+        }
+
+        .match .date {
+            color: var(--muted);
+            font-size: 13px;
+        }
+
+        /* التواصل */
+        .contact-info {
+            line-height: 1.8;
+        }
+
+        .contact-info p {
+            margin-bottom: 10px;
+        }
+
+        /* الإعلانات */
+        .ad-space {
+            background: #f0f0f0;
+            border: 1px dashed var(--border);
+            border-radius: 8px;
+            height: 250px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 20px;
+            color: var(--muted);
+            overflow: hidden;
+        }
+
+        .ad-space img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        /* الأخبار */
+        .news-item {
+            padding: 12px 0;
+            border-bottom: 1px dashed rgba(0, 0, 0, 0.1);
+            display: flex;
+            gap: 15px;
+        }
+
+        .news-item:last-child {
+            border-bottom: none;
+        }
+
+        .news-thumb {
+            width: 120px;
+            height: 80px;
+            background: #ddd;
+            border-radius: 6px;
+            flex-shrink: 0;
+            overflow: hidden;
+        }
+
+        .news-thumb img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .news-content {
+            flex: 1;
+        }
+
+        .news-item h3 {
+            font-size: 16px;
+            margin-bottom: 5px;
+        }
+
+        .news-item .meta {
+            color: var(--muted);
+            font-size: 13px;
+        }
+
+        /* التذييل */
+        footer {
+            margin-top: 40px;
+            padding: 20px 0;
+            color: var(--muted);
+            font-size: 14px;
+            border-top: 1px solid var(--border);
+            text-align: center;
+        }
+
+        /* صفحات متعددة */
+        .page-content {
+            display: none;
+        }
+
+        .page-content.active {
+            display: block;
+        }
+
+        /* التجاوب مع الشاشات المختلفة */
+        @media (max-width: 900px) {
+            .main-layout {
+                grid-template-columns: 1fr;
+            }
+            
+            .championships {
+                gap: 15px;
+            }
+            
+            .championship-logo {
+                width: 100px;
+                height: 100px;
+                font-size: 14px;
+            }
+            
+            .logo {
+                width: 70px;
+                height: 70px;
+                font-size: 14px;
+            }
+            
+            .brand-text h1 {
+                font-size: 20px;
+            }
+            
+            .news-item {
+                flex-direction: column;
+            }
+            
+            .news-thumb {
+                width: 100%;
+                height: 160px;
+            }
+        }
+
+        /* أنماط إضافية للمباريات القادمة والسابقة */
+        .matches-nav {
+            display: flex;
+            gap: 5px;
+            margin-bottom: 0;
+            border-bottom: 1px solid var(--border);
+            padding-bottom: 0;
+        }
+
+        .matches-nav-btn {
+            background: #f5f5f5;
+            color: var(--muted);
+            border: 1px solid var(--border);
+            border-bottom: none;
+            padding: 12px 20px;
+            border-radius: 8px 8px 0 0;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 600;
+            transition: all 0.3s;
+            position: relative;
+            bottom: -1px;
+        }
+
+        .matches-nav-btn:hover {
+            background: #e9e9e9;
+        }
+
+        .matches-nav-btn.active {
+            background: white;
+            color: var(--accent);
+            border-bottom: 1px solid white;
+            box-shadow: 0 2px 3px rgba(0,0,0,0.05);
+        }
+
+        .match-result {
+            font-weight: bold;
+            color: var(--accent);
+            font-size: 14px;
+            margin: 0 10px;
+        }
+
+        .match-status {
+            font-size: 11px;
+            padding: 2px 6px;
+            border-radius: 4px;
+            margin-left: 5px;
+        }
+
+        .status-played {
+            background: #0b5d3b;
+            color: white;
+        }
+
+        .status-upcoming {
+            background: #e63946;
+            color: white;
+        }
+        
+        /* تبويبات المباريات */
+        .matches-tab {
+            display: none;
+        }
+        
+        .matches-tab.active {
+            display: block;
+        }
+        
+        .matches-container {
+            background: white;
+            border: 1px solid var(--border);
+            border-top: none;
+            border-radius: 0 0 8px 8px;
+            min-height: 300px;
+            padding: 15px;
+        }
+
+        /* شارات المجموعة والدورة */
+        .match-badge {
+            background: #e63946;
+            color: white;
+            padding: 2px 6px;
+            border-radius: 10px;
+            font-size: 11px;
+            margin-left: 5px;
+            font-weight: bold;
+        }
+
+        .round-badge {
+            background: #0b5d3b;
+            color: white;
+            padding: 2px 6px;
+            border-radius: 10px;
+            font-size: 9px;
+            margin-left: 3px;
+            font-weight: bold;
+        }
+
+        .badges-container {
+            display: flex;
+            justify-content: center;
+            gap: 5px;
+            margin-bottom: 5px;
+        }
+
+        .today-matches-loading {
+            text-align: center;
+            padding: 15px;
+            color: var(--muted);
+            font-size: 9px;
+        }
+
+        .today-matches-empty {
+            text-align: center;
+            padding: 15px;
+            color: var(--muted);
+            font-size:9px;
+            font-style: italic;
+        }
+
+        .refresh-today-btn {
+            background: var(--accent);
+            color: white;
+            border: none;
+            padding: 6px 12px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 9px;
+            margin: 8px auto 0;
+            display: block;
+            transition: background 0.3s;
+        }
+
+        .refresh-today-btn:hover {
+            background: #09482c;
+        }
+
+        .match .teams {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 4px;
+            align-items: center;
+        }
+
+        .match .team {
+            flex: 1;
+            text-align: center;
+            font-size: 12px;
+        }
+
+        .match .vs {
+            margin: 0 8px;
+            color: var(--muted);
+            font-weight: bold;
+            font-size: 15px;
+        }
+
+        .match .date {
+            color: var(--muted);
+            font-size: 11px;
+            text-align: center;
+            margin-top: 3px;
+        }
+
+        .match .stadium {
+            color: var(--muted);
+            font-size: 11px;
+            text-align: center;
+            margin-top: 2px;
+        }
+    </style>
+</head>
+<body>
+    <!-- الشريط العلوي مع التاريخ والوقت -->
+    <div class="top-bar">
+        <div class="wrap">
+            <div class="datetime-container">
+                <div id="currentDateTimeArabic" class="datetime-arabic"></div>
+                <div id="currentDateTimeFrench" class="datetime-french"></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="wrap">
+        <!-- العنوان الرئيسي مع الشعار -->
+        <header class="site-header">
+            <div class="brand">
+                <div class="logo">
+                    <!-- استبدل هذا بمصدر الصورة الفعلي -->
+                    <img src="logo.png">
+                </div>
+                <div class="brand-text">
+                    <h1>هواة الشمال</h1>
+                    <div class="subtitle">أخبار الشباب الممارس لكرة القدم المنضوي تحت لواء العصبة الجهوية لطنجة تطوان الحسيمة لكرة القدم</div>
+                </div>
+            </div>
+        </header>
+
+        <!-- المحتوى الرئيسي - صفحة الواجهة -->
+        <div id="home" class="page-content active">
+            <div class="main-layout">
+                <!-- العمود الأيسر -مباريات  -->
+                <aside class="left-column">
+                    <div class="section">
+                        <h2> مباريات اليوم القسم الثاني</h2>
+                        <!-- محتوى مباريات اليوم -->
+                        <div id="todayMatchesTab" class="matches-tab active">
+                            <div id="todayMatchesContainer">
+                                <div class="today-matches-loading">⏳ جاري تحميل مباريات اليوم...</div>
+                            </div>
+                        </div>
+                    </div>
+                </aside>
+
+                <!-- العمود الأوسط - الأخبار -->
+                <main class="center-column">
+                    <div class="section" >
+                        <h1> القسم الثاني لكرة القدم</h1>
+                        <h4>.هنا تجد برنامج الدوارات ونتائج المباريات وجدول الترتيب لكل مجموعات القسم الثاني لكرة القدم</h4>
+
+                        <div class="ad-space" onclick="goTo2groupeA()" style="cursor: pointer;">
+                            <div class="wrap" >
+                                القسم الثاني لكرة القدم المجموعة أ
+                            </div>
+                        </div>   
+
+                        <div class="ad-space" onclick="goTo2groupeB()" style="cursor: pointer;">
+                            <div class="wrap" >
+                                القسم الثاني لكرة القدم المجموعة ب
+                            </div>
+                        </div>
+                        
+                        <div class="ad-space" onclick="goTo2groupeC()" style="cursor: pointer;">
+                            <div class="wrap" >
+                                القسم الثاني لكرة القدم المجموعة ج
+                            </div>
+                        </div>   
+
+                        <div class="ad-space" onclick="goTo2groupeD()" style="cursor: pointer;">
+                            <div class="wrap" >
+                                القسم الثاني لكرة القدم المجموعة د
+                            </div>
+                        </div>
+                         
+                        <div class="ad-space" onclick="goTo2groupeH()" style="cursor: pointer;">
+                            <div class="wrap" >
+                        
+                                القسم الثاني لكرة القدم المجموعة هـ
+                            </div>
+                        </div>
+
+                        <div class="ad-space" onclick="goTo2groupeE()" style="cursor: pointer;">
+                            <div class="wrap" >
+                                القسم الثاني لكرة القدم المجموعة ح
+                            </div>
+                        </div>
+                        
+                        <div class="ad-space" onclick="goTo2groupeK()" style="cursor: pointer;">
+                            <div class="wrap" >
+                                القسم الثاني لكرة القدم المجموعة ك
+                            </div>
+                        </div>
+                        
+                        <div class="ad-space" onclick="goTo2groupeL()" style="cursor: pointer;">
+                            <div class="wrap" >
+                                القسم الثاني لكرة القدم المجموعة ل
+                            </div>
+                        </div>
+                        
+                        <div class="ad-space" onclick="goTo2groupeT()" style="cursor: pointer;">
+                            <div class="wrap" >
+                                القسم الثاني لكرة القدم المجموعة ط
+                            </div>
+                        </div>
+                        
+                        <div class="ad-space" onclick="goTo2groupeW()" style="cursor: pointer;">
+                            <div class="wrap" >
+                                القسم الثاني لكرة القدم المجموعة و
+                            </div>
+                        </div>
+                        
+                        <div class="ad-space" onclick="goTo2groupeY()" style="cursor: pointer;">
+                            <div class="wrap" >
+                                القسم الثاني لكرة القدم المجموعة ي
+                            </div>
+                        </div>
+                        
+                        <div class="ad-space" onclick="goTo2groupeZ()" style="cursor: pointer;">
+                            <div class="wrap" >
+                                القسم الثاني لكرة القدم المجموعة ز
+                            </div>
+                        </div>
+                    </div>
+                </main>
+
+                <!-- العمود الأيمن -الإعلانات والتواصل -->
+                <aside class="right-column">
+                    <div class="section">
+                        <h2>مساحة إعلانية</h2>
+                        <div class="ad-space">
+                            <img src="https://via.placeholder.com/300x250/cccccc/666666?text=إعلان+1" alt="إعلان 1">
+                        </div>
+                    </div>
+
+                    <div class="section">
+                        <h2>التواصل</h2>
+                        <div class="contact-info">
+                            <p><strong>البريد الإلكتروني:</strong> moh2982004@gmail.com</p>
+                            <p><strong>الهاتف:</strong> 0675069172</p>
+                        </div>
+                    </div>
+                </aside>
+            </div>
+        </div>
+
+        <!-- صفحة العصبة -->
+        <div id="league" class="page-content">
+            <div class="section">
+                <h2>عن العصبة</h2>
+                <p>هنا محتوى صفحة العصبة مع معلومات مفصلة عن العصبة الجهوية طنجة تطوان الحسيمة.</p>
+                <!-- يمكنك إضافة المزيد من المحتوى هنا -->
+            </div>
+        </div>
+
+        <!-- صفحة الترتيب -->
+        <div id="ranking" class="page-content">
+            <div class="section">
+                <h2>ترتيب الفرق</h2>
+                <p>هنا محتوى صفحة الترتيب مع جداول ترتيب الفرق في مختلف البطولات.</p>
+                <!-- يمكنك إضافة المزيد من المحتوى هنا -->
+            </div>
+        </div>
+
+        <!-- صفحة المباريات -->
+        <div id="matches" class="page-content">
+            <div class="section">
+                <h2>جدول المباريات</h2>
+                <p>هنا محتوى صفحة المباريات مع جدول كامل للمباريات القادمة والنتائج.</p>
+                <!-- يمكنك إضافة المزيد من المحتوى هنا -->
+            </div>
+        </div>
+
+        <!-- صفحة التحكيم -->
+        <div id="refereeing" class="page-content">
+            <div class="section">
+                <h2>قسم التحكيم</h2>
+                <p>هنا محتوى صفحة التحكيم مع معلومات عن الحكام وجدول المباريات الخاصة بهم.</p>
+                <!-- يمكنك إضافة المزيد من المحتوى هنا -->
+            </div>
+        </div>
+
+        <!-- صفحة التواصل -->
+        <div id="contact" class="page-content">
+            <div class="section">
+                <h2>اتصل بنا</h2>
+                <p>هنا محتوى صفحة التواصل مع نموذج الاتصال والمعلومات الكاملة.</p>
+                <!-- يمكنك إضافة المزيد من المحتوى هنا -->
+            </div>
+        </div>
+
+        <!-- التذييل -->
+        <footer>
+            <div class="wrap">
+                مع تحيات محمد العبد
+            </div>
+        </footer>
+    </div>
+
+    <script>
+        // دالة لعرض التاريخ والوقت الحاليين بالعربية مع الأرقام العالمية
+        function updateDateTimeArabic() {
+            const now = new Date();
+            
+            const weekdays = ['الأحد', 'الإثنين', 'الثلاثاء', 'الأربعاء', 'الخميس', 'الجمعة', 'السبت'];
+            const months = ['يناير', 'فبراير', 'مارس', 'أبريل', 'مايو', 'يونيو', 'يوليو', 'أغسطس', 'سبتمبر', 'أكتوبر', 'نوفمبر', 'ديسمبر'];
+            
+            const weekday = weekdays[now.getDay()];
+            const day = now.getDate();
+            const month = months[now.getMonth()];
+            const year = now.getFullYear();
+            
+            const hours = now.getHours().toString().padStart(2, '0');
+            const minutes = now.getMinutes().toString().padStart(2, '0');
+            const seconds = now.getSeconds().toString().padStart(2, '0');
+            
+            const dateTimeStr = `${weekday}، ${day} ${month} ${year} - ${hours}:${minutes}:${seconds}`;
+            document.getElementById('currentDateTimeArabic').textContent = dateTimeStr;
+        }
+        
+        // دالة لعرض التاريخ والوقت الحاليين بالفرنسية
+        function updateDateTimeFrench() {
+            const now = new Date();
+            const options = { 
+                weekday: 'long', 
+                year: 'numeric', 
+                month: 'long', 
+                day: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit',
+                second: '2-digit'
+            };
+            const dateTimeStr = now.toLocaleDateString('fr-FR', options);
+            document.getElementById('currentDateTimeFrench').textContent = dateTimeStr;
+        }
+        
+        // تحديث التاريخ والوقت عند تحميل الصفحة ثم كل ثانية
+        updateDateTimeArabic();
+        updateDateTimeFrench();
+        setInterval(updateDateTimeArabic, 1000);
+        setInterval(updateDateTimeFrench, 1000);
+
+        // التنقل بين الصفحات
+        document.addEventListener('DOMContentLoaded', function() {
+            const navLinks = document.querySelectorAll('nav.main-nav a');
+            const pages = document.querySelectorAll('.page-content');
+            
+            navLinks.forEach(link => {
+                link.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const targetPage = this.getAttribute('data-page');
+                    
+                    // إخفاء جميع الصفحات
+                    pages.forEach(page => {
+                        page.classList.remove('active');
+                    });
+                    
+                    // إظهار الصفحة المطلوبة
+                    document.getElementById(targetPage).classList.add('active');
+                });
+            });
+            
+            // تبديل اللغة
+            const langButtons = document.querySelectorAll('.lang-btn');
+            langButtons.forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const lang = this.getAttribute('data-lang');
+                    
+                    // تحديث حالة الأزرار
+                    langButtons.forEach(b => b.classList.remove('active'));
+                    this.classList.add('active');
+                    
+                    // هنا يمكنك إضافة منطق تغيير اللغة
+                    console.log('تم تغيير اللغة إلى: ' + lang);
+                    // يمكنك استخدام مكتبة مثل i18next للترجمة الفعلية
+                });
+            });
+        });
+
+        // دوال الانتقال إلى صفحات المجموعات
+        function goTo2groupeA() {
+            window.location.href = "2groupeA.html";
+        }
+        function goTo2groupeB() {
+            window.location.href = "2groupeB.html";
+        }
+        function goTo2groupeC() {
+            window.location.href = "2groupeC.html";
+        }
+        function goTo2groupeD() {
+            window.location.href = "2groupeD.html";
+        }
+        function goTo2groupeE() {
+            window.location.href = "2groupeE.html";
+        }
+        function goTo2groupeH() {
+            window.location.href = "2groupeH.html";
+        }
+        function goTo2groupeK() {
+            window.location.href = "2groupeK.html";
+        }
+        function goTo2groupeL() {
+            window.location.href = "2groupeL.html";
+        }
+        function goTo2groupeT() {
+            window.location.href = "2groupeT.html";
+        }
+        function goTo2groupeW() {
+            window.location.href = "2groupeW.html";
+        }
+        function goTo2groupeY() {
+            window.location.href = "2groupeY.html";
+        }
+        function goTo2groupeZ() {
+            window.location.href = "2groupeZ.html";
+        }
+
+        // ========== دالة تحميل وعرض مباريات اليوم من جميع المجموعات ==========
+        async function loadAndDisplayTodayMatches() {
+            const container = document.getElementById('todayMatchesContainer');
+            
+            try {
+                // جلب البيانات من جميع المجموعات الجديدة
+                const [ 
+                    group2AData, group2BData, group2CData, group2DData,
+                    group2EData, group2HData, group2KData, group2LData,
+                    group2TData, group2WData, group2YData, group2ZData
+                ] = await Promise.all([
+                    fetchMatchesData("https://howat-b10bd-default-rtdb.europe-west1.firebasedatabase.app/2GroupA/detailedRounds.json"),
+                    fetchMatchesData("https://howat-b10bd-default-rtdb.europe-west1.firebasedatabase.app/2GroupB/detailedRounds.json"),
+                    fetchMatchesData("https://howat-b10bd-default-rtdb.europe-west1.firebasedatabase.app/2GroupC/detailedRounds.json"),
+                    fetchMatchesData("https://howat-b10bd-default-rtdb.europe-west1.firebasedatabase.app/2GroupD/detailedRounds.json"),
+                    fetchMatchesData("https://howat-b10bd-default-rtdb.europe-west1.firebasedatabase.app/2GroupE/detailedRounds.json"),
+                    fetchMatchesData("https://howat-b10bd-default-rtdb.europe-west1.firebasedatabase.app/2GroupH/detailedRounds.json"),
+                    fetchMatchesData("https://howat-b10bd-default-rtdb.europe-west1.firebasedatabase.app/2GroupK/detailedRounds.json"),
+                    fetchMatchesData("https://howat-b10bd-default-rtdb.europe-west1.firebasedatabase.app/2GroupL/detailedRounds.json"),
+                    fetchMatchesData("https://howat-b10bd-default-rtdb.europe-west1.firebasedatabase.app/2GroupT/detailedRounds.json"),
+                    fetchMatchesData("https://howat-b10bd-default-rtdb.europe-west1.firebasedatabase.app/2GroupW/detailedRounds.json"),
+                    fetchMatchesData("https://howat-b10bd-default-rtdb.europe-west1.firebasedatabase.app/2GroupY/detailedRounds.json"),
+                    fetchMatchesData("https://howat-b10bd-default-rtdb.europe-west1.firebasedatabase.app/2GroupZ/detailedRounds.json")
+                ]);
+                
+                // جلب نتائج المباريات من جميع المجموعات
+                const [ 
+                    results2A, results2B, results2C, results2D,
+                    results2E, results2H, results2K, results2L,
+                    results2T, results2W, results2Y, results2Z
+                ] = await Promise.all([
+                    fetchMatchesData("https://howat-b10bd-default-rtdb.europe-west1.firebasedatabase.app/2GroupA/matches.json"),
+                    fetchMatchesData("https://howat-b10bd-default-rtdb.europe-west1.firebasedatabase.app/2GroupB/matches.json"),
+                    fetchMatchesData("https://howat-b10bd-default-rtdb.europe-west1.firebasedatabase.app/2GroupC/matches.json"),
+                    fetchMatchesData("https://howat-b10bd-default-rtdb.europe-west1.firebasedatabase.app/2GroupD/matches.json"),
+                    fetchMatchesData("https://howat-b10bd-default-rtdb.europe-west1.firebasedatabase.app/2GroupE/matches.json"),
+                    fetchMatchesData("https://howat-b10bd-default-rtdb.europe-west1.firebasedatabase.app/2GroupH/matches.json"),
+                    fetchMatchesData("https://howat-b10bd-default-rtdb.europe-west1.firebasedatabase.app/2GroupK/matches.json"),
+                    fetchMatchesData("https://howat-b10bd-default-rtdb.europe-west1.firebasedatabase.app/2GroupL/matches.json"),
+                    fetchMatchesData("https://howat-b10bd-default-rtdb.europe-west1.firebasedatabase.app/2GroupT/matches.json"),
+                    fetchMatchesData("https://howat-b10bd-default-rtdb.europe-west1.firebasedatabase.app/2GroupW/matches.json"),
+                    fetchMatchesData("https://howat-b10bd-default-rtdb.europe-west1.firebasedatabase.app/2GroupY/matches.json"),
+                    fetchMatchesData("https://howat-b10bd-default-rtdb.europe-west1.firebasedatabase.app/2GroupZ/matches.json")
+                ]);
+                
+                // استخراج المباريات اليومية من جميع المجموعات
+                const todayMatches2A = extractTodayMatches(group2AData, results2A, "القسم الثاني المجموعة أ");
+                const todayMatches2B = extractTodayMatches(group2BData, results2B, "القسم الثاني المجموعة ب");
+                const todayMatches2C = extractTodayMatches(group2CData, results2C, "القسم الثاني المجموعة ج");
+                const todayMatches2D = extractTodayMatches(group2DData, results2D, "القسم الثاني المجموعة د");
+                const todayMatches2E = extractTodayMatches(group2EData, results2E, "القسم الثاني المجموعة هـ");
+                const todayMatches2H = extractTodayMatches(group2HData, results2H, "القسم الثاني المجموعة ح");
+                const todayMatches2K = extractTodayMatches(group2KData, results2K, "القسم الثاني المجموعة ك");
+                const todayMatches2L = extractTodayMatches(group2LData, results2L, "القسم الثاني المجموعة ل");
+                const todayMatches2T = extractTodayMatches(group2TData, results2T, "القسم الثاني المجموعة ت");
+                const todayMatches2W = extractTodayMatches(group2WData, results2W, "القسم الثاني المجموعة و");
+                const todayMatches2Y = extractTodayMatches(group2YData, results2Y, "القسم الثاني المجموعة ي");
+                const todayMatches2Z = extractTodayMatches(group2ZData, results2Z, "القسم الثاني المجموعة ز");
+                
+                // دمج المباريات من جميع المجموعات
+                const allTodayMatches = [
+                    ...todayMatches2A, ...todayMatches2B, ...todayMatches2C, ...todayMatches2D,
+                    ...todayMatches2E, ...todayMatches2H, ...todayMatches2K, ...todayMatches2L,
+                    ...todayMatches2T, ...todayMatches2W, ...todayMatches2Y, ...todayMatches2Z
+                ];
+                
+                // ترتيب المباريات حسب الوقت (من الأقرب إلى الأبعد)
+                allTodayMatches.sort((a, b) => {
+                    if (a.time && b.time) {
+                        return a.time.localeCompare(b.time);
+                    }
+                    return 0;
+                });
+                
+                // عرض المباريات
+                displayTodayMatchesInContainer(allTodayMatches);
+                
+            } catch (error) {
+                console.error('خطأ في تحميل مباريات اليوم:', error);
+                container.innerHTML = `
+                    <div class="today-matches-empty">❌ حدث خطأ في تحميل البيانات</div>
+                    <button class="refresh-today-btn" onclick="loadAndDisplayTodayMatches()">🔄 حاول مرة أخرى</button>
+                `;
+            }
+        }
+
+        // دالة جلب بيانات المباريات من Firebase
+        async function fetchMatchesData(url) {
+            try {
+                const response = await fetch(url);
+                
+                if (!response.ok) {
+                    throw new Error(`فشل في جلب البيانات من ${url}`);
+                }
+                
+                const data = await response.json();
+                return data || {};
+            } catch (error) {
+                console.error('خطأ في جلب البيانات:', error);
+                // إرجاع كائن فارغ بدلاً من إلقاء خطأ للسماح باستمرار العملية
+                return {};
+            }
+        }
+
+        // دالة استخراج مباريات اليوم من البيانات
+        function extractTodayMatches(detailedRounds, results, groupName) {
+            const today = new Date();
+            const todayString = today.toISOString().split('T')[0]; // YYYY-MM-DD
+            
+            const todayMatches = [];
+            
+            if (!detailedRounds) return todayMatches;
+            
+            // البحث في جميع الجولات عن المباريات التي تلعب اليوم
+            Object.keys(detailedRounds).forEach(round => {
+                if (detailedRounds[round] && Array.isArray(detailedRounds[round])) {
+                    detailedRounds[round].forEach(match => {
+                        if (match.date === todayString) {
+                            // البحث عن نتيجة المباراة
+                            let matchResult = null;
+                            if (results && Array.isArray(results)) {
+                                matchResult = results.find(r => 
+                                    r.round == round && 
+                                    r.team1 == match.team1 && 
+                                    r.team2 == match.team2
+                                );
+                            }
+                            
+                            todayMatches.push({
+                                ...match,
+                                round: parseInt(round),
+                                group: groupName,
+                                result: matchResult
+                            });
+                        }
+                    });
+                }
+            });
+            
+            return todayMatches;
+        }
+
+        // دالة التحقق من حالة المباراة (منتهية أم لا)
+        function isMatchFinished(match) {
+            if (!match.time) return false;
+            
+            // تقسيم الوقت إلى ساعات ودقائق
+            const [hours, minutes] = match.time.split(':').map(Number);
+            
+            // إنشاء تاريخ ووقت بداية المباراة
+            const matchStartTime = new Date();
+            matchStartTime.setHours(hours, minutes, 0, 0);
+            
+            // حساب الوقت الحالي
+            const now = new Date();
+            
+            // حساب الفارق الزمني بالدقائق
+            const timeDiff = (now - matchStartTime) / (1000 * 60);
+            
+            // إذا مر أكثر من 90 دقيقة من وقت بداية المباراة، تعتبر منتهية
+            return timeDiff >= 90;
+        }
+
+        // دالة عرض المباريات في الحيز المخصص
+        function displayTodayMatchesInContainer(todayMatches) {
+            const container = document.getElementById('todayMatchesContainer');
+            
+            if (!todayMatches || todayMatches.length === 0) {
+                container.innerHTML = `
+                    <div class="today-matches-empty">لا توجد مباريات اليوم</div>
+                    <button class="refresh-today-btn" onclick="loadAndDisplayTodayMatches()">🔄 تحديث</button>
+                `;
+                return;
+            }
+            
+            let matchesHTML = '';
+            
+            todayMatches.forEach(match => {
+                // تحديد رمز المجموعة بناءً على اسمها
+                let groupBadge = '';
+                if (match.group === "القسم الثاني المجموعة أ") {
+                    groupBadge = '<span class="match-badge">الثاني أ</span>';
+                } else if (match.group === "القسم الثاني المجموعة ب") {
+                    groupBadge = '<span class="match-badge">الثاني ب</span>';
+                } else if (match.group === "القسم الثاني المجموعة ج") {
+                    groupBadge = '<span class="match-badge">الثاني ج</span>';
+                } else if (match.group === "القسم الثاني المجموعة د") {
+                    groupBadge = '<span class="match-badge">الثاني د</span>';
+                } else if (match.group === "القسم الثاني المجموعة هـ") {
+                    groupBadge = '<span class="match-badge">الثاني هـ</span>';
+                } else if (match.group === "القسم الثاني المجموعة ح") {
+                    groupBadge = '<span class="match-badge">الثاني ح</span>';
+                } else if (match.group === "القسم الثاني المجموعة ك") {
+                    groupBadge = '<span class="match-badge">الثاني ك</span>';
+                } else if (match.group === "القسم الثاني المجموعة ل") {
+                    groupBadge = '<span class="match-badge">الثاني ل</span>';
+                } else if (match.group === "القسم الثاني المجموعة ت") {
+                    groupBadge = '<span class="match-badge">الثاني ت</span>';
+                } else if (match.group === "القسم الثاني المجموعة و") {
+                    groupBadge = '<span class="match-badge">الثاني و</span>';
+                } else if (match.group === "القسم الثاني المجموعة ي") {
+                    groupBadge = '<span class="match-badge">الثاني ي</span>';
+                } else if (match.group === "القسم الثاني المجموعة ز") {
+                    groupBadge = '<span class="match-badge">الثاني ز</span>';
+                } else {
+                    groupBadge = `<span class="match-badge">${match.group}</span>`;
+                }
+                
+                const roundBadge = `<span class="round-badge">د${match.round}</span>`;
+                
+                // التحقق من حالة المباراة
+                const isFinished = isMatchFinished(match);
+                const finishedBadge = isFinished ? '<span class="match-status status-played">منتهية</span>' : '';
+                
+                // عرض نتيجة المباراة إذا كانت متاحة
+                let resultHTML = '';
+                if (match.result) {
+                    const { goals1, goals2, withdraw1, withdraw2, penalty1, penalty2, postponed } = match.result;
+                    
+                    if (postponed) {
+                        resultHTML = `<div class="match-result">مؤجلة</div>`;
+                    } else if (withdraw1) {
+                        resultHTML = `<div class="match-result">انسحاب ${match.team1}</div>`;
+                    } else if (withdraw2) {
+                        resultHTML = `<div class="match-result">انسحاب ${match.team2}</div>`;
+                    } else {
+                        resultHTML = `<div class="match-result">${goals1} - ${goals2}</div>`;
+                    }
+                } else {
+                    resultHTML = `<div class="vs">VS</div>`;
+                }
+                
+                matchesHTML += `
+                    <div class="match">
+                        <div class="badges-container">
+                            ${groupBadge}
+                            ${roundBadge}
+                            ${finishedBadge}
+                        </div>
+                        <div class="teams">
+                            <div class="team">${match.team1 || 'فريق غير معروف'}</div>
+                            ${resultHTML}
+                            <div class="team">${match.team2 || 'فريق غير معروف'}</div>
+                        </div>
+                        <div class="date">${match.time || 'لم يتم تحديد الوقت'}</div>
+                        <div class="stadium">${match.stadium || 'ملعب غير محدد'}</div>
+                    </div>
+                `;
+            });
+            
+            matchesHTML += `
+                <button class="refresh-today-btn" onclick="loadAndDisplayTodayMatches()">🔄 تحديث المباريات</button>
+            `;
+            
+            container.innerHTML = matchesHTML;
+        }
+
+        // تحميل مباريات اليوم تلقائياً عند فتح الصفحة
+        document.addEventListener('DOMContentLoaded', function() {
+            // انتظر قليلاً لضمان تحميل DOM بالكامل
+            setTimeout(loadAndDisplayTodayMatches, 100);
+        });
+    </script>
+</body>
+</html>
