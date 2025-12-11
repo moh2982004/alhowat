@@ -674,9 +674,10 @@
                 <aside class="left-column">
                     <div class="section" style="padding: 0; overflow: hidden;">
                         <div class="matches-nav">
-                            <button class="matches-nav-btn active" data-tab="today">مباريات اليوم</button>
-                            <button class="matches-nav-btn" data-tab="upcoming">المباريات القادمة</button>
+                            
                             <button class="matches-nav-btn" data-tab="previous">المباريات السابقة</button>
+			    <button class="matches-nav-btn active" data-tab="today">مباريات اليوم</button>
+                            <button class="matches-nav-btn" data-tab="upcoming">المباريات القادمة</button>
                         </div>
                         
                         <div class="matches-container">
@@ -722,6 +723,9 @@
                             </div>
                              <div class="championship-logo" onclick="goToChamal2()" style="cursor: pointer;">
                                 <img src="DEV-2.webp">
+                            </div>
+			     <div class="championship-logo" onclick="goTogroupeF()" style="cursor: pointer;">
+                                <img src="EX-FEM.webp">
                             </div>
                         </div>
                     </div>
@@ -857,6 +861,9 @@
          function goToChamal2() {
             window.location.href = "Chamal2.html";
         }
+function goTogroupeF() {
+            window.location.href = "groupeF.html";
+        }
         
         // 🔥 عداد الزيارات - يحسب كل زيارة للصفحة
         async function updateVisitCounter() {
@@ -959,18 +966,19 @@
             container.innerHTML = '<div class="today-matches-loading">⏳ جاري تحميل مباريات اليوم...</div>';
             
             try {
-                // جلب البيانات من جميع المجموعات القديمة والجديدة
+                // جلب البيانات من جميع المجموعات القديمة والجديدة (بإضافة GroupF)
                 const [ 
-                    // المجموعات القديمة
-                    groupAData, groupBData, group1AData, group1BData, group1CData, group1DData,
+                    // المجموعات القديمة (بإضافة GroupF)
+                    groupAData, groupBData, groupFData, group1AData, group1BData, group1CData, group1DData,
                     // المجموعات الجديدة
                     group2AData, group2BData, group2CData, group2DData,
                     group2EData, group2HData, group2KData, group2LData,
                     group2TData, group2WData, group2YData, group2ZData
                 ] = await Promise.all([
-                    // الروابط القديمة
+                    // الروابط القديمة (بإضافة GroupF)
                     fetchMatchesData("https://howat-b10bd-default-rtdb.europe-west1.firebasedatabase.app/GroupA/detailedRounds.json"),
                     fetchMatchesData("https://howat-b10bd-default-rtdb.europe-west1.firebasedatabase.app/GroupB/detailedRounds.json"),
+                    fetchMatchesData("https://howat-b10bd-default-rtdb.europe-west1.firebasedatabase.app/GroupF/detailedRounds.json"), // الرابط الجديد
                     fetchMatchesData("https://howat-b10bd-default-rtdb.europe-west1.firebasedatabase.app/1GroupA/detailedRounds.json"),
                     fetchMatchesData("https://howat-b10bd-default-rtdb.europe-west1.firebasedatabase.app/1GroupB/detailedRounds.json"),
                     fetchMatchesData("https://howat-b10bd-default-rtdb.europe-west1.firebasedatabase.app/1GroupC/detailedRounds.json"),
@@ -990,18 +998,19 @@
                     fetchMatchesData("https://howat-b10bd-default-rtdb.europe-west1.firebasedatabase.app/2GroupZ/detailedRounds.json")
                 ]);
                 
-                // جلب نتائج المباريات من جميع المجموعات
+                // جلب نتائج المباريات من جميع المجموعات (بإضافة GroupF)
                 const [ 
-                    // النتائج القديمة
-                    resultsA, resultsB, results1A, results1B, results1C, results1D,
+                    // النتائج القديمة (بإضافة GroupF)
+                    resultsA, resultsB, resultsF, results1A, results1B, results1C, results1D,
                     // النتائج الجديدة
                     results2A, results2B, results2C, results2D,
                     results2E, results2H, results2K, results2L,
                     results2T, results2W, results2Y, results2Z
                 ] = await Promise.all([
-                    // الروابط القديمة
+                    // الروابط القديمة (بإضافة GroupF)
                     fetchMatchesData("https://howat-b10bd-default-rtdb.europe-west1.firebasedatabase.app/GroupA/matches.json"),
                     fetchMatchesData("https://howat-b10bd-default-rtdb.europe-west1.firebasedatabase.app/GroupB/matches.json"),
+                    fetchMatchesData("https://howat-b10bd-default-rtdb.europe-west1.firebasedatabase.app/GroupF/matches.json"), // الرابط الجديد
                     fetchMatchesData("https://howat-b10bd-default-rtdb.europe-west1.firebasedatabase.app/1GroupA/matches.json"),
                     fetchMatchesData("https://howat-b10bd-default-rtdb.europe-west1.firebasedatabase.app/1GroupB/matches.json"),
                     fetchMatchesData("https://howat-b10bd-default-rtdb.europe-west1.firebasedatabase.app/1GroupC/matches.json"),
@@ -1021,9 +1030,10 @@
                     fetchMatchesData("https://howat-b10bd-default-rtdb.europe-west1.firebasedatabase.app/2GroupZ/matches.json")
                 ]);
                 
-                // استخراج المباريات اليومية من جميع المجموعات القديمة
+                // استخراج المباريات اليومية من جميع المجموعات القديمة (بإضافة GroupF)
                 const todayMatchesA = extractTodayMatches(groupAData, resultsA, "القسم الممتاز المجموعة أ");
                 const todayMatchesB = extractTodayMatches(groupBData, resultsB, "القسم الممتاز المجموعة ب");
+                const todayMatchesF = extractTodayMatches(groupFData, resultsF, "القسم الممتاز نساء"); // المجموعة الجديدة
                 const todayMatches1A = extractTodayMatches(group1AData, results1A, "القسم الأول المجموعة أ");
                 const todayMatches1B = extractTodayMatches(group1BData, results1B, "القسم الأول المجموعة ب");
                 const todayMatches1C = extractTodayMatches(group1CData, results1C, "القسم الأول المجموعة ج");
@@ -1045,7 +1055,8 @@
                 
                 // دمج المباريات من جميع المجموعات القديمة والجديدة
                 const allTodayMatches = [
-                    ...todayMatchesA, ...todayMatchesB, ...todayMatches1A, ...todayMatches1B, ...todayMatches1C, ...todayMatches1D,
+                    ...todayMatchesA, ...todayMatchesB, ...todayMatchesF, // إضافة GroupF
+                    ...todayMatches1A, ...todayMatches1B, ...todayMatches1C, ...todayMatches1D,
                     ...todayMatches2A, ...todayMatches2B, ...todayMatches2C, ...todayMatches2D, ...todayMatches2E, ...todayMatches2H,
                     ...todayMatches2K, ...todayMatches2L, ...todayMatches2T, ...todayMatches2W, ...todayMatches2Y, ...todayMatches2Z
                 ];
@@ -1161,12 +1172,14 @@
             let matchesHTML = '';
             
             todayMatches.forEach(match => {
-                // تحديد رمز المجموعة بناءً على اسمها
+                // تحديد رمز المجموعة بناءً على اسمها (بإضافة GroupF)
                 let groupBadge = '';
                 if (match.group === "القسم الممتاز المجموعة أ") {
                     groupBadge = '<span class="match-badge">ممتاز أ</span>';
                 } else if (match.group === "القسم الممتاز المجموعة ب") {
                     groupBadge = '<span class="match-badge">ممتاز ب</span>';
+                } else if (match.group === "القسم الممتاز نساء") {
+                    groupBadge = '<span class="match-badge">ممتاز  نساء</span>'; // المجموعة الجديدة
                 } else if (match.group === "القسم الأول المجموعة أ") {
                     groupBadge = '<span class="match-badge">الأول أ</span>';
                 } else if (match.group === "القسم الأول المجموعة ب") {
@@ -1257,18 +1270,19 @@
             const container = document.getElementById('upcomingMatchesContainer');
             
             try {
-                // جلب البيانات من جميع المجموعات القديمة والجديدة
+                // جلب البيانات من جميع المجموعات القديمة والجديدة (بإضافة GroupF)
                 const [ 
-                    // المجموعات القديمة
-                    groupAData, groupBData, group1AData, group1BData, group1CData, group1DData,
+                    // المجموعات القديمة (بإضافة GroupF)
+                    groupAData, groupBData, groupFData, group1AData, group1BData, group1CData, group1DData,
                     // المجموعات الجديدة
                     group2AData, group2BData, group2CData, group2DData,
                     group2EData, group2HData, group2KData, group2LData,
                     group2TData, group2WData, group2YData, group2ZData
                 ] = await Promise.all([
-                    // الروابط القديمة
+                    // الروابط القديمة (بإضافة GroupF)
                     fetchMatchesData("https://howat-b10bd-default-rtdb.europe-west1.firebasedatabase.app/GroupA/detailedRounds.json"),
                     fetchMatchesData("https://howat-b10bd-default-rtdb.europe-west1.firebasedatabase.app/GroupB/detailedRounds.json"),
+                    fetchMatchesData("https://howat-b10bd-default-rtdb.europe-west1.firebasedatabase.app/GroupF/detailedRounds.json"), // الرابط الجديد
                     fetchMatchesData("https://howat-b10bd-default-rtdb.europe-west1.firebasedatabase.app/1GroupA/detailedRounds.json"),
                     fetchMatchesData("https://howat-b10bd-default-rtdb.europe-west1.firebasedatabase.app/1GroupB/detailedRounds.json"),
                     fetchMatchesData("https://howat-b10bd-default-rtdb.europe-west1.firebasedatabase.app/1GroupC/detailedRounds.json"),
@@ -1288,15 +1302,16 @@
                     fetchMatchesData("https://howat-b10bd-default-rtdb.europe-west1.firebasedatabase.app/2GroupZ/detailedRounds.json")
                 ]);
                 
-                // استخراج جميع المباريات القادمة من المجموعات القديمة (خلال أسبوعين)
+                // استخراج جميع المباريات القادمة من المجموعات القديمة (بإضافة GroupF)
                 const upcomingMatchesA = extractUpcomingMatches(groupAData, "القسم الممتاز المجموعة أ");
                 const upcomingMatchesB = extractUpcomingMatches(groupBData, "القسم الممتاز المجموعة ب");
+                const upcomingMatchesF = extractUpcomingMatches(groupFData, "القسم الممتاز نساء"); // المجموعة الجديدة
                 const upcomingMatches1A = extractUpcomingMatches(group1AData, "القسم الأول المجموعة أ");
                 const upcomingMatches1B = extractUpcomingMatches(group1BData, "القسم الأول المجموعة ب");
                 const upcomingMatches1C = extractUpcomingMatches(group1CData, "القسم الأول المجموعة ج");
                 const upcomingMatches1D = extractUpcomingMatches(group1DData, "القسم الأول المجموعة د");
                 
-                // استخراج جميع المباريات القادمة من المجموعات الجديدة (خلال أسبوعين)
+                // استخراج جميع المباريات القادمة من المجموعات الجديدة
                 const upcomingMatches2A = extractUpcomingMatches(group2AData, "القسم الثاني المجموعة أ");
                 const upcomingMatches2B = extractUpcomingMatches(group2BData, "القسم الثاني المجموعة ب");
                 const upcomingMatches2C = extractUpcomingMatches(group2CData, "القسم الثاني المجموعة ج");
@@ -1312,7 +1327,8 @@
                 
                 // دمج المباريات من جميع المجموعات القديمة والجديدة
                 const allUpcomingMatches = [
-                    ...upcomingMatchesA, ...upcomingMatchesB, ...upcomingMatches1A, ...upcomingMatches1B, ...upcomingMatches1C, ...upcomingMatches1D,
+                    ...upcomingMatchesA, ...upcomingMatchesB, ...upcomingMatchesF, // إضافة GroupF
+                    ...upcomingMatches1A, ...upcomingMatches1B, ...upcomingMatches1C, ...upcomingMatches1D,
                     ...upcomingMatches2A, ...upcomingMatches2B, ...upcomingMatches2C, ...upcomingMatches2D, ...upcomingMatches2E, ...upcomingMatches2H,
                     ...upcomingMatches2K, ...upcomingMatches2L, ...upcomingMatches2T, ...upcomingMatches2W, ...upcomingMatches2Y, ...upcomingMatches2Z
                 ];
@@ -1388,12 +1404,14 @@
             let matchesHTML = '';
             
             upcomingMatches.forEach(match => {
-                // تحديد رمز المجموعة بناءً على اسمها
+                // تحديد رمز المجموعة بناءً على اسمها (بإضافة GroupF)
                 let groupBadge = '';
                 if (match.group === "القسم الممتاز المجموعة أ") {
                     groupBadge = '<span class="match-badge">ممتاز أ</span>';
                 } else if (match.group === "القسم الممتاز المجموعة ب") {
                     groupBadge = '<span class="match-badge">ممتاز ب</span>';
+                } else if (match.group === "القسم الممتاز نساء") {
+                    groupBadge = '<span class="match-badge">ممتاز  نساء</span>'; // المجموعة الجديدة
                 } else if (match.group === "القسم الأول المجموعة أ") {
                     groupBadge = '<span class="match-badge">الأول أ</span>';
                 } else if (match.group === "القسم الأول المجموعة ب") {
@@ -1466,18 +1484,19 @@
             const container = document.getElementById('previousMatchesContainer');
             
             try {
-                // جلب البيانات من جميع المجموعات القديمة والجديدة
+                // جلب البيانات من جميع المجموعات القديمة والجديدة (بإضافة GroupF)
                 const [ 
-                    // المجموعات القديمة
-                    groupAData, groupBData, group1AData, group1BData, group1CData, group1DData,
+                    // المجموعات القديمة (بإضافة GroupF)
+                    groupAData, groupBData, groupFData, group1AData, group1BData, group1CData, group1DData,
                     // المجموعات الجديدة
                     group2AData, group2BData, group2CData, group2DData,
                     group2EData, group2HData, group2KData, group2LData,
                     group2TData, group2WData, group2YData, group2ZData
                 ] = await Promise.all([
-                    // الروابط القديمة
+                    // الروابط القديمة (بإضافة GroupF)
                     fetchMatchesData("https://howat-b10bd-default-rtdb.europe-west1.firebasedatabase.app/GroupA/detailedRounds.json"),
                     fetchMatchesData("https://howat-b10bd-default-rtdb.europe-west1.firebasedatabase.app/GroupB/detailedRounds.json"),
+                    fetchMatchesData("https://howat-b10bd-default-rtdb.europe-west1.firebasedatabase.app/GroupF/detailedRounds.json"), // الرابط الجديد
                     fetchMatchesData("https://howat-b10bd-default-rtdb.europe-west1.firebasedatabase.app/1GroupA/detailedRounds.json"),
                     fetchMatchesData("https://howat-b10bd-default-rtdb.europe-west1.firebasedatabase.app/1GroupB/detailedRounds.json"),
                     fetchMatchesData("https://howat-b10bd-default-rtdb.europe-west1.firebasedatabase.app/1GroupC/detailedRounds.json"),
@@ -1497,18 +1516,19 @@
                     fetchMatchesData("https://howat-b10bd-default-rtdb.europe-west1.firebasedatabase.app/2GroupZ/detailedRounds.json")
                 ]);
                 
-                // جلب نتائج المباريات من جميع المجموعات
+                // جلب نتائج المباريات من جميع المجموعات (بإضافة GroupF)
                 const [ 
-                    // النتائج القديمة
-                    resultsA, resultsB, results1A, results1B, results1C, results1D,
+                    // النتائج القديمة (بإضافة GroupF)
+                    resultsA, resultsB, resultsF, results1A, results1B, results1C, results1D,
                     // النتائج الجديدة
                     results2A, results2B, results2C, results2D,
                     results2E, results2H, results2K, results2L,
                     results2T, results2W, results2Y, results2Z
                 ] = await Promise.all([
-                    // الروابط القديمة
+                    // الروابط القديمة (بإضافة GroupF)
                     fetchMatchesData("https://howat-b10bd-default-rtdb.europe-west1.firebasedatabase.app/GroupA/matches.json"),
                     fetchMatchesData("https://howat-b10bd-default-rtdb.europe-west1.firebasedatabase.app/GroupB/matches.json"),
+                    fetchMatchesData("https://howat-b10bd-default-rtdb.europe-west1.firebasedatabase.app/GroupF/matches.json"), // الرابط الجديد
                     fetchMatchesData("https://howat-b10bd-default-rtdb.europe-west1.firebasedatabase.app/1GroupA/matches.json"),
                     fetchMatchesData("https://howat-b10bd-default-rtdb.europe-west1.firebasedatabase.app/1GroupB/matches.json"),
                     fetchMatchesData("https://howat-b10bd-default-rtdb.europe-west1.firebasedatabase.app/1GroupC/matches.json"),
@@ -1528,15 +1548,16 @@
                     fetchMatchesData("https://howat-b10bd-default-rtdb.europe-west1.firebasedatabase.app/2GroupZ/matches.json")
                 ]);
                 
-                // استخراج جميع المباريات السابقة من المجموعات القديمة (خلال أسبوعين)
+                // استخراج جميع المباريات السابقة من المجموعات القديمة (بإضافة GroupF)
                 const previousMatchesA = extractPreviousMatches(groupAData, resultsA, "القسم الممتاز المجموعة أ");
                 const previousMatchesB = extractPreviousMatches(groupBData, resultsB, "القسم الممتاز المجموعة ب");
+                const previousMatchesF = extractPreviousMatches(groupFData, resultsF, "القسم الممتاز نساء"); // المجموعة الجديدة
                 const previousMatches1A = extractPreviousMatches(group1AData, results1A, "القسم الأول المجموعة أ");
                 const previousMatches1B = extractPreviousMatches(group1BData, results1B, "القسم الأول المجموعة ب");
                 const previousMatches1C = extractPreviousMatches(group1CData, results1C, "القسم الأول المجموعة ج");
                 const previousMatches1D = extractPreviousMatches(group1DData, results1D, "القسم الأول المجموعة د");
                 
-                // استخراج جميع المباريات السابقة من المجموعات الجديدة (خلال أسبوعين)
+                // استخراج جميع المباريات السابقة من المجموعات الجديدة
                 const previousMatches2A = extractPreviousMatches(group2AData, results2A, "القسم الثاني المجموعة أ");
                 const previousMatches2B = extractPreviousMatches(group2BData, results2B, "القسم الثاني المجموعة ب");
                 const previousMatches2C = extractPreviousMatches(group2CData, results2C, "القسم الثاني المجموعة ج");
@@ -1552,7 +1573,8 @@
                 
                 // دمج المباريات من جميع المجموعات القديمة والجديدة
                 const allPreviousMatches = [
-                    ...previousMatchesA, ...previousMatchesB, ...previousMatches1A, ...previousMatches1B, ...previousMatches1C, ...previousMatches1D,
+                    ...previousMatchesA, ...previousMatchesB, ...previousMatchesF, // إضافة GroupF
+                    ...previousMatches1A, ...previousMatches1B, ...previousMatches1C, ...previousMatches1D,
                     ...previousMatches2A, ...previousMatches2B, ...previousMatches2C, ...previousMatches2D, ...previousMatches2E, ...previousMatches2H,
                     ...previousMatches2K, ...previousMatches2L, ...previousMatches2T, ...previousMatches2W, ...previousMatches2Y, ...previousMatches2Z
                 ];
@@ -1639,12 +1661,14 @@
             let matchesHTML = '';
             
             previousMatches.forEach(match => {
-                // تحديد رمز المجموعة بناءً على اسمها
+                // تحديد رمز المجموعة بناءً على اسمها (بإضافة GroupF)
                 let groupBadge = '';
                 if (match.group === "القسم الممتاز المجموعة أ") {
                     groupBadge = '<span class="match-badge">ممتاز أ</span>';
                 } else if (match.group === "القسم الممتاز المجموعة ب") {
                     groupBadge = '<span class="match-badge">ممتاز ب</span>';
+                } else if (match.group === "القسم الممتاز نساء") {
+                    groupBadge = '<span class="match-badge">ممتاز  نساء</span>'; // المجموعة الجديدة
                 } else if (match.group === "القسم الأول المجموعة أ") {
                     groupBadge = '<span class="match-badge">الأول أ</span>';
                 } else if (match.group === "القسم الأول المجموعة ب") {
@@ -1738,5 +1762,3 @@
     </script>
 </body>
 </html>
-
-
